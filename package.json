@@ -1,0 +1,26 @@
+{
+  "name": "advar",
+  "version": "0.0.1",
+  "description": "Advanced Array Library",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pcandido/advar.git"
+  },
+  "keywords": [
+    "array",
+    "collection",
+    "mapreduce",
+    "groupby",
+    "list"
+  ],
+  "author": "Paulo Cândido <pcandido.m@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/pcandido/advar/issues"
+  },
+  "homepage": "https://github.com/pcandido/advar#readme"
+}
