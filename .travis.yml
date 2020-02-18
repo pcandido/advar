@@ -7,5 +7,7 @@ cache:
 install:
   - npm install -g codecov
 script:
-  - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
+  - NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha \
+  --require blanket \
+  --reporter mocha-lcov-reporter
   - codecov      
