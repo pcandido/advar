@@ -45,6 +45,18 @@ class advar{
     return this._data;
   }
 
+  /**
+   * Gets an element from advar by index. Negative indices will get elements backwards. Out of bound indices will return undefined.
+   *
+   * @param index is the position from where the element should be gotten
+   */
+  get(index){
+    if(index < 0)
+      index = this._data.length + index;
+
+    return this._data[index];
+  }
+
 }
 
 module.exports = { advar }

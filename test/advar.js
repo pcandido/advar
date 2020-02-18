@@ -2,6 +2,8 @@ const assert = require('assert');
 const { advar } = require('../src/advar');
 
 const de = assert.deepEqual;
+const eq = assert.equal;
+const seq = assert.strictEqual;
 
 describe('advar', () => {
 
@@ -64,11 +66,27 @@ describe('advar', () => {
       de(new advar([1],2,'3',{a:4}).toArray(), [[1],2,'3',{a:4}]);
       de(new advar([],[]).toArray(), [[],[]]);
     });
+  
+  });
 
-    
+  describe('get', () => {
 
-    
+    it('should return an element by index', () => {
+	const ad = new advar(1,2,3);
+	eq(ad.get(1), 2);
+        eq(ad.get(0), 1);
+    });
 
+    it('should return elements backwards for negative indices', () => {
+        const ad = new advar(1,2,3);
+	eq(ad.get(-1), 3);
+        eq(ad.get(-2), 2);
+    });
+
+    it('should return undefined for out of bound indices', () => {
+      seq(new advar(1,2,3).get(5), undefined);
+      seq(new advar(1,2,3).get(-5), undefined);
+    });
   });
 
 });
