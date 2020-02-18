@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/pcandido/advar/issues"
   },
-  "homepage": "https://github.com/pcandido/advar#readme"
+  "homepage": "https://github.com/pcandido/advar#readme",
+  "devDependencies": {
+    "mocha": "^7.0.1"
+  }
 }
