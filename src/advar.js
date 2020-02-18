@@ -1,3 +1,5 @@
+const util = require('util');
+
 class advar{
 
   _data;
@@ -33,6 +35,13 @@ class advar{
    * Returns the raw data as a native array
    */
   toArray(){
+    return this._data;
+  }
+
+  /**
+   * An node debugger/inspect representation for the advar. It will be the same of the raw data (array-like representation).
+   */
+  [util.inspect.custom](depth, opts) {
     return this._data;
   }
 
