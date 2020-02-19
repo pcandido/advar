@@ -1,28 +1,26 @@
 {
-  "name": "advar",
+  "name": "listof",
   "version": "0.0.1",
-  "description": "Advanced Array Library",
-  "main": "index.js",
+  "description": "Advanced List Library",
+  "main": "listof.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pcandido/advar.git"
+    "url": "git+https://github.com/pcandido/listof.git"
   },
   "keywords": [
+    "list",
     "array",
-    "collection",
-    "mapreduce",
-    "groupby",
-    "list"
+    "collection"
   ],
   "author": "Paulo Cândido <pcandido.m@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/pcandido/advar/issues"
+    "url": "https://github.com/pcandido/listof/issues"
   },
-  "homepage": "https://github.com/pcandido/advar#readme",
+  "homepage": "https://github.com/pcandido/listof#readme",
   "devDependencies": {
     "mocha": "^7.0.1"
   }

@@ -1,4 +1,4 @@
-# advar
-Advanced Array Library
+# listof
+Advanced List Library
 
-[![Build Status](https://travis-ci.org/pcandido/advar.svg?branch=master)](https://travis-ci.org/pcandido/advar)
+[![Build Status](https://travis-ci.org/pcandido/listof.svg?branch=master)](https://travis-ci.org/pcandido/listof)
