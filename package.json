@@ -1,14 +1,14 @@
 {
-  "name": "listof",
+  "name": "sparray",
   "version": "0.0.1",
-  "description": "Advanced List Library",
-  "main": "listof.js",
+  "description": "Super Array",
+  "main": "sparray.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pcandido/listof.git"
+    "url": "git+https://github.com/pcandido/sparray.git"
   },
   "keywords": [
     "list",
@@ -18,9 +18,9 @@
   "author": "Paulo Cândido <pcandido.m@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/pcandido/listof/issues"
+    "url": "https://github.com/pcandido/sparray/issues"
   },
-  "homepage": "https://github.com/pcandido/listof#readme",
+  "homepage": "https://github.com/pcandido/sparray#readme",
   "devDependencies": {
     "mocha": "^7.0.1"
   }

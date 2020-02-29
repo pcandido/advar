@@ -1,4 +1,4 @@
-# listof
-Advanced List Library
+# sparray
+Super Array
 
-[![Build Status](https://travis-ci.org/pcandido/listof.svg?branch=master)](https://travis-ci.org/pcandido/listof)
+[![Build Status](https://travis-ci.org/pcandido/sparray.svg?branch=master)](https://travis-ci.org/pcandido/sparray)
