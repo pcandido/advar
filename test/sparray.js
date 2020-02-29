@@ -48,13 +48,13 @@ describe('sparray', () => {
       assert.throws(() => { sparray.range() }, Error);
     })
 
-    it('should build a list with 1 param', () => {
+    it('should build an array from 0 to n (exclusive) for a given n param', () => {
       deq(sparray.range(0).toArray(), []);
       deq(sparray.range(3).toArray(), [0, 1, 2]);
       deq(sparray.range(-3).toArray(), [0, -1, -2]);
     });
 
-    it('should build a list with 2 params', () => {
+    it('should build an array from n to m (exclusive) for a given n and m params', () => {
       deq(sparray.range(3, 3).toArray(), []);
       deq(sparray.range(0, 3).toArray(), [0, 1, 2]);
       deq(sparray.range(3, 6).toArray(), [3, 4, 5]);
@@ -62,20 +62,19 @@ describe('sparray', () => {
       deq(sparray.range(3, -3).toArray(), [3, 2, 1, 0, -1, -2]);
     });
 
-    it('should build a list with 3 params', () => {
+    it('should build an array from n to m (exclusive), incremented by i for a given n, m and i params', () => {
       deq(sparray.range(5, 10, 1).toArray(), [5, 6, 7, 8, 9]);
       deq(sparray.range(5, 10, 2).toArray(), [5, 7, 9]);
       deq(sparray.range(5, 11, 2).toArray(), [5, 7, 9]);
       deq(sparray.range(11, 5, -2).toArray(), [11, 9, 7]);
+    });
+
+    it('should throw an exception if the direction of range does not match the direction of increment', () => {
       assert.throws(() => { sparray.range(5, 10, -1) }, Error);
       assert.throws(() => { sparray.range(10, 5, 1) }, Error);
     });
 
   });
-
-});
-
-describe('List', () => {
 
   describe('toArray', () => {
 
