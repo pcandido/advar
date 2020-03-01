@@ -1,13 +1,3 @@
 language: node_js
 node_js: 
   - "stable"
-install:
-  - npm i
-addons:
-    code_climate:
-        repo_token: 70a16d126cb3438c73ec40d212098f8b80b77d9aeb87ee8e1f25d3efefa94825
-script: ./node_modules/.bin/nyc --reporter=lcov ./node_modules/mocha/bin/mocha --require @babel/register
-before_script:
-  - npm install codeclimate-test-reporter nyc -g
-after_script:
-  - codeclimate-test-reporter < ./coverage/lcov.info

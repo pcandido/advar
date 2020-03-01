@@ -22,9 +22,7 @@
   },
   "homepage": "https://github.com/pcandido/sparray#readme",
   "devDependencies": {
-    "@babel/register": "^7.8.6",
-    "mocha": "^7.0.1",
-    "nyc": "^15.0.0"
+    "mocha": "^7.0.1"
   },
   "dependencies": {}
 }
