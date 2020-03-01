@@ -1,3 +1,7 @@
 language: node_js
 node_js: 
   - "stable"
+deploy:
+  provider: npm
+  email: "pcandido.m@gmail.com"
+  api_key: "g-BQgo7E70-9oaeg5xmTng"
