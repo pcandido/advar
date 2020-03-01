@@ -4,7 +4,8 @@
   "description": "Super Array",
   "main": "sparray.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "deploy": "npm test && npm version patch && git push"
   },
   "repository": {
     "type": "git",
