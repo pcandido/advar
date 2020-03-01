@@ -22,6 +22,9 @@
   },
   "homepage": "https://github.com/pcandido/sparray#readme",
   "devDependencies": {
-    "mocha": "^7.0.1"
-  }
+    "blanket": "^1.2.3",
+    "mocha": "^7.0.1",
+    "mocha-lcov-reporter": "^1.3.0"
+  },
+  "dependencies": {}
 }
