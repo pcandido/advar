@@ -1,9 +1,8 @@
 language: node_js
 node_js: 
   - "stable"
-cache:
-  directories:
-    - "node_modules"
+install:
+  - npm i
 addons:
     code_climate:
         repo_token: 70a16d126cb3438c73ec40d212098f8b80b77d9aeb87ee8e1f25d3efefa94825
