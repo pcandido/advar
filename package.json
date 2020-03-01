@@ -5,7 +5,7 @@
   "main": "sparray.js",
   "scripts": {
     "test": "mocha",
-    "deploy": "npm test && npm version patch"
+    "deploy": "npm test && npm version patch && git push"
   },
   "repository": {
     "type": "git",
