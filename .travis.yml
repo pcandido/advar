@@ -6,6 +6,7 @@ cache:
     - "node_modules"
 install:
   - npm install -g codecov
+  - npm install -g blanket
 script:
   - NODE_ENV=test SPARRAY_COVERAGE=1 ./node_modules/.bin/mocha --require blanket --reporter mocha-lcov-reporter
   - codecov
