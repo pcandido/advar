@@ -117,6 +117,10 @@ exports.of = (...data) => {
  * 1) with one param, the range iterates 1-by-1 from 0 (inclusive) to the value of param (exclusive)
  * 2) with two params, the range iterates 1-by-1 from the first param (inclusive) to the second param (exclusive)
  * 3) with three params, the range iterates by the value of the third param, from the value of the first param (inclusive) to the value of the second param (exclusive)
+ *
+ * @param start of range (inclusive)
+ * @param end of range (exclusive)
+ * @param step the size of increment
  */
 exports.range = (start, end, step) => {
   if (typeof start === 'undefined') {
@@ -142,5 +146,23 @@ exports.range = (start, end, step) => {
   } else {
     for (let i = start; i < end; i += step) data.push(i);
   }
+  return new List(data);
+}
+
+/**
+ * Creates an sparray of n static value elements.
+ * @param n the desired length of the sparray
+ * @param value the static value for all the elements
+ */
+exports.fillOf = (n, value) => {
+  if(typeof n !== 'number'){
+    throw new Error('Invalid number (n) of elements');
+  }
+
+  data = [];
+  for(let i = 0; i < n; i++){
+    data.push(value);
+  }
+
   return new List(data);
 }

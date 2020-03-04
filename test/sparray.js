@@ -76,6 +76,22 @@ describe('sparray', () => {
 
   });
 
+  describe('fillOf(n, value)', () => {
+
+    it('should generate a sparray of "n" "value" elements', () => {
+      deq(sparray.fillOf(3,1).toArray(), [1,1,1]);
+      deq(sparray.fillOf(3).toArray(), [undefined, undefined, undefined]);
+      deq(sparray.fillOf(1,1).toArray(), [1]);
+      deq(sparray.fillOf(0,1).toArray(), []);
+      deq(sparray.fillOf(-1,1).toArray(), []);
+    });
+
+    it('should throw an exception if n was not a number', () => {
+      assert.throws(() => {sparray.fillOf('asdf',1)});
+    });
+
+  });
+
   describe('toArray()', () => {
 
     it('should return the raw stored data', () => {
