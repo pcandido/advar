@@ -106,6 +106,18 @@ describe('sparray', () => {
     });
   });
 
+  describe('values()', () => {
+
+    it('should return an iterator', () => {
+      const sp = sparray.of(1,2,3,4,5);
+      const ir = sp.values();
+      eq(ir.next().value, 1);
+      eq(ir.next().value, 2);
+      eq(ir.next().done, false);
+    });
+
+  });
+
   describe('length', () => {
 
     it('should return the size of the sparray', () => {

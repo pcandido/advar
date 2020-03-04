@@ -42,19 +42,22 @@ class List {
     return this._data[index];
   }
 
+  /**
+   * Returns an iteratior of the sparray.
+   */
   values(){
     return this._data.values();
   }
 
   /**
-   * Reflects the number of elements in an sparray.
+   * The number of elements of the sparray.
    */
   get length(){
     return this._data.length;
   }
 
   /*
-   * Reflects the number of elements in an sparray.
+   * Returns the number of elements of the sparray.
    */ 
   size(){
     return this.length;
