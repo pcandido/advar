@@ -76,7 +76,7 @@ describe('sparray', () => {
 
   });
 
-  describe('toArray', () => {
+  describe('toArray()', () => {
 
     it('should return the raw stored data', () => {
       const a = sparray.of();
@@ -86,7 +86,7 @@ describe('sparray', () => {
 
   });
 
-  describe('get', () => {
+  describe('get(i)', () => {
 
     it('should return an element by index', () => {
       const ad = sparray.of(1, 2, 3);
@@ -104,6 +104,46 @@ describe('sparray', () => {
       seq(sparray.of(1, 2, 3).get(5), undefined);
       seq(sparray.of(1, 2, 3).get(-5), undefined);
     });
+  });
+
+  describe('length', () => {
+
+    it('should return the size of the sparray', () => {
+      eq(sparray.of().length, 0);
+      eq(sparray.of(1,2,3).length, 3);
+      eq(sparray.of([1,2,3]).length, 3);
+    });
+
+  });
+
+  describe('size()', () => {
+
+    it('should return the size of the sparray', () => {
+      eq(sparray.of().size(), 0);
+      eq(sparray.of(1,2,3).size(), 3);
+      eq(sparray.of([1,2,3]).size(), 3);
+    });
+
+  });
+
+
+  describe('count([filterFn[, thisArg]])', () => {
+
+    it('should return the size of the sparray if no filterFn is provided', () => {
+      eq(sparray.of().count(), 0);
+      eq(sparray.of(1,2,3).count(), 3);
+      eq(sparray.of([1,2,3]).count(), 3);
+    });
+
+    it('should count only filtered elements if a filterFn is provided', () => {
+      eq(sparray.of(1,2,3,4).count(a => a%2), 2);
+      eq(sparray.of(1,2,3,4).count(a => false), 0);
+      eq(sparray.of(1,2,3,4).count(a => true), 4);
+      eq(sparray.of(10,20,30,40).count((a,i) => a == 10), 1);
+      eq(sparray.of(10,20,30,40).count((a,i) => i == 1), 1);
+      eq(sparray.of(10,20,30,40).count((a,i,s) => s.get(i) == a), 4);
+    });
+
   });
 
 });

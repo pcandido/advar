@@ -42,6 +42,44 @@ class List {
     return this._data[index];
   }
 
+  values(){
+    return this._data.values();
+  }
+
+  /**
+   * Reflects the number of elements in an sparray.
+   */
+  get length(){
+    return this._data.length;
+  }
+
+  /*
+   * Reflects the number of elements in an sparray.
+   */ 
+  size(){
+    return this.length;
+  }
+
+  /**
+   * Counts the number of elements. If a filterFn is provided,only the filtered elements will be counted
+   *
+   * @param filterFn is an optional filter function to be applied during the count
+   * @param thisArg object to be used as this inside filterFn
+   */
+  count(filterFn, thisArg){
+    if(!filterFn) return this.length;
+
+    filterFn.bind(thisArg || this);
+
+    let c = 0;
+    for(let i = 0; i < this.length; i++){
+      if(filterFn(this.get(i), i, this))
+        c++;
+    }
+
+    return c;    
+  }
+
 }
 
 /**
