@@ -7,37 +7,37 @@ const seq = assert.strictEqual;
 
 describe('sparray', () => {
 
-  describe('of', () => {
+  describe('from', () => {
 
     it('should be called with no parameters', () => {
-      deq(sparray.of().toArray(), []);
+      deq(sparray.from().toArray(), []);
     });
 
     it('should accpet a single non-array-like element', () => {
-      deq(sparray.of(1).toArray(), [1]);
-      deq(sparray.of('a').toArray(), ['a']);
-      deq(sparray.of({ a: 1 }).toArray(), [{ a: 1 }]);
-      deq(sparray.of(true).toArray(), [true]);
+      deq(sparray.from(1).toArray(), [1]);
+      deq(sparray.from('a').toArray(), ['a']);
+      deq(sparray.from({ a: 1 }).toArray(), [{ a: 1 }]);
+      deq(sparray.from(true).toArray(), [true]);
     });
 
     it('should accept a single array-like element', () => {
-      deq(sparray.of([]).toArray(), []);
-      deq(sparray.of([1]).toArray(), [1]);
-      deq(sparray.of(['a']).toArray(), ['a']);
-      deq(sparray.of([{ a: 1 }]).toArray(), [{ a: 1 }]);
-      deq(sparray.of([1, 2, 3]).toArray(), [1, 2, 3]);
-      deq(sparray.of(['a', 1, false]).toArray(), ['a', 1, false]);
+      deq(sparray.from([]).toArray(), []);
+      deq(sparray.from([1]).toArray(), [1]);
+      deq(sparray.from(['a']).toArray(), ['a']);
+      deq(sparray.from([{ a: 1 }]).toArray(), [{ a: 1 }]);
+      deq(sparray.from([1, 2, 3]).toArray(), [1, 2, 3]);
+      deq(sparray.from(['a', 1, false]).toArray(), ['a', 1, false]);
     });
 
     it('should accept a single list to be cloned', () => {
-      deq(sparray.of(sparray.of()).toArray(), []);
-      deq(sparray.of(sparray.of([1, 2, 3])).toArray(), [1, 2, 3]);
+      deq(sparray.from(sparray.from()).toArray(), []);
+      deq(sparray.from(sparray.from([1, 2, 3])).toArray(), [1, 2, 3]);
     });
 
     it('should accpet multiple elements', () => {
-      deq(sparray.of(1, 2, 3).toArray(), [1, 2, 3]);
-      deq(sparray.of([1], 2, '3', { a: 4 }).toArray(), [[1], 2, '3', { a: 4 }]);
-      deq(sparray.of([], []).toArray(), [[], []]);
+      deq(sparray.from(1, 2, 3).toArray(), [1, 2, 3]);
+      deq(sparray.from([1], 2, '3', { a: 4 }).toArray(), [[1], 2, '3', { a: 4 }]);
+      deq(sparray.from([], []).toArray(), [[], []]);
     });
 
   });
@@ -79,15 +79,25 @@ describe('sparray', () => {
   describe('fillOf(n, value)', () => {
 
     it('should generate a sparray of "n" "value" elements', () => {
-      deq(sparray.fillOf(3,1).toArray(), [1,1,1]);
+      deq(sparray.fillOf(3, 1).toArray(), [1, 1, 1]);
       deq(sparray.fillOf(3).toArray(), [undefined, undefined, undefined]);
-      deq(sparray.fillOf(1,1).toArray(), [1]);
-      deq(sparray.fillOf(0,1).toArray(), []);
-      deq(sparray.fillOf(-1,1).toArray(), []);
+      deq(sparray.fillOf(1, 1).toArray(), [1]);
+      deq(sparray.fillOf(0, 1).toArray(), []);
+      deq(sparray.fillOf(-1, 1).toArray(), []);
     });
 
     it('should throw an exception if n was not a number', () => {
-      assert.throws(() => {sparray.fillOf('asdf',1)});
+      assert.throws(() => { sparray.fillOf('asdf', 1) });
+    });
+
+  });
+
+  describe('fromSet', () => {
+
+    it('should build a sparray from set', () => {
+      deq(sparray.fromSet(new Set([])).toArray(), []);
+      deq(sparray.fromSet(new Set([1, 2, 3])).toArray(), [1, 2, 3]);
+      deq(sparray.fromSet(new Set([1, 2, 3, 1, 2, 3])).toArray(), [1, 2, 3]);
     });
 
   });
@@ -95,7 +105,7 @@ describe('sparray', () => {
   describe('toArray()', () => {
 
     it('should return the raw stored data', () => {
-      const a = sparray.of();
+      const a = sparray.from();
       a._data = [1, 2, 3];  //hard-coded to assert toArray without depends to the constructor
       deq(a.toArray(), [1, 2, 3]);
     });
@@ -105,27 +115,27 @@ describe('sparray', () => {
   describe('get(i)', () => {
 
     it('should return an element by index', () => {
-      const ad = sparray.of(1, 2, 3);
+      const ad = sparray.from(1, 2, 3);
       eq(ad.get(1), 2);
       eq(ad.get(0), 1);
     });
 
     it('should return elements backwards for negative indices', () => {
-      const ad = sparray.of(1, 2, 3);
+      const ad = sparray.from(1, 2, 3);
       eq(ad.get(-1), 3);
       eq(ad.get(-2), 2);
     });
 
     it('should return undefined for out of bound indices', () => {
-      seq(sparray.of(1, 2, 3).get(5), undefined);
-      seq(sparray.of(1, 2, 3).get(-5), undefined);
+      seq(sparray.from(1, 2, 3).get(5), undefined);
+      seq(sparray.from(1, 2, 3).get(-5), undefined);
     });
   });
 
   describe('values()', () => {
 
     it('should return an iterator', () => {
-      const sp = sparray.of(1,2,3,4,5);
+      const sp = sparray.from(1, 2, 3, 4, 5);
       const ir = sp.values();
       eq(ir.next().value, 1);
       eq(ir.next().value, 2);
@@ -137,9 +147,9 @@ describe('sparray', () => {
   describe('length', () => {
 
     it('should return the size of the sparray', () => {
-      eq(sparray.of().length, 0);
-      eq(sparray.of(1,2,3).length, 3);
-      eq(sparray.of([1,2,3]).length, 3);
+      eq(sparray.from().length, 0);
+      eq(sparray.from(1, 2, 3).length, 3);
+      eq(sparray.from([1, 2, 3]).length, 3);
     });
 
   });
@@ -147,9 +157,9 @@ describe('sparray', () => {
   describe('size()', () => {
 
     it('should return the size of the sparray', () => {
-      eq(sparray.of().size(), 0);
-      eq(sparray.of(1,2,3).size(), 3);
-      eq(sparray.of([1,2,3]).size(), 3);
+      eq(sparray.from().size(), 0);
+      eq(sparray.from(1, 2, 3).size(), 3);
+      eq(sparray.from([1, 2, 3]).size(), 3);
     });
 
   });
@@ -158,18 +168,30 @@ describe('sparray', () => {
   describe('count([filterFn[, thisArg]])', () => {
 
     it('should return the size of the sparray if no filterFn is provided', () => {
-      eq(sparray.of().count(), 0);
-      eq(sparray.of(1,2,3).count(), 3);
-      eq(sparray.of([1,2,3]).count(), 3);
+      eq(sparray.from().count(), 0);
+      eq(sparray.from(1, 2, 3).count(), 3);
+      eq(sparray.from([1, 2, 3]).count(), 3);
     });
 
     it('should count only filtered elements if a filterFn is provided', () => {
-      eq(sparray.of(1,2,3,4).count(a => a%2), 2);
-      eq(sparray.of(1,2,3,4).count(a => false), 0);
-      eq(sparray.of(1,2,3,4).count(a => true), 4);
-      eq(sparray.of(10,20,30,40).count((a,i) => a == 10), 1);
-      eq(sparray.of(10,20,30,40).count((a,i) => i == 1), 1);
-      eq(sparray.of(10,20,30,40).count((a,i,s) => s.get(i) == a), 4);
+      eq(sparray.from(1, 2, 3, 4).count(a => a % 2), 2);
+      eq(sparray.from(1, 2, 3, 4).count(a => false), 0);
+      eq(sparray.from(1, 2, 3, 4).count(a => true), 4);
+      eq(sparray.from(10, 20, 30, 40).count((a, i) => a == 10), 1);
+      eq(sparray.from(10, 20, 30, 40).count((a, i) => i == 1), 1);
+      eq(sparray.from(10, 20, 30, 40).count((a, i, s) => s.get(i) == a), 4);
+    });
+
+  });
+
+  describe('distinct()', () => {
+
+    it('should remove all duplicates', () => {
+      deq(sparray.from().distinct().toArray(), []);
+      deq(sparray.from(1).distinct().toArray(), [1]);
+      deq(sparray.from(1, 2, 3).distinct().toArray(), [1, 2, 3]);
+      deq(sparray.from(1, 1, 2, 2, 3, 3).distinct().toArray(), [1, 2, 3]);
+      deq(sparray.from(1, 2, 3, 1, 2, 3).distinct().toArray(), [1, 2, 3]);
     });
 
   });
