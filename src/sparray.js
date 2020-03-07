@@ -182,7 +182,26 @@ class Sparray {
    * @param thisArg object to be used as this inside mapFn
    */
   map(mapFn, thisArg) {
-    return from(this._data.map(mapFn, thisArg))
+    if (typeof thisArg !== 'undefined')
+      return from(this._data.map(mapFn, thisArg));
+    else
+      return from(this._data.map(mapFn));
+  }
+
+  /**
+   * Aggregate the elements of sparray pair-by-pair, according to the reduceFn, 
+   * accumulating the aggregation until last element.
+   * @param reduceFn aggragation (reducer) function
+   * @param initialValue to initialize the accumulated value
+   * @param thisArg object to be used as this inside reduceFn
+   */
+  reduce(reduceFn, initialValue, thisArg) {
+    if (typeof thisArg !== 'undefined')
+      return this._data.reduce(reduceFn, initialValue, thisArg);
+    else if (typeof initialValue !== 'undefined')
+      return this._data.reduce(reduceFn, initialValue);
+    else
+      return this._data.reduce(reduceFn);
   }
 
   /**

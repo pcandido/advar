@@ -6,12 +6,12 @@ const eq = assert.equal;
 const deq = assert.deepEqual;
 const seq = assert.strictEqual;
 
-const testNative = (func, req, res) => {
+const testNative = (func, req, res, resCompare) => {
   const callback = sinon.spy();
   const stub = sinon.stub(Array.prototype, func).returns(res);
-  const arr = sparray.from(req).map(callback);
+  const arr = sparray.from(req)[func](callback);
   eq(stub.calledOnce, true, 'The native method was not called');
-  deq(arr.toArray(), res);
+  deq(arr, resCompare);
   stub.restore();
 };
 
@@ -175,7 +175,7 @@ describe('sparray', () => {
   });
 
 
-  describe('count([filterFn[, thisArg]])', () => {
+  describe('count(filterFn, thisArg)', () => {
 
     it('should return the size of the sparray if no filterFn is provided', () => {
       eq(sparray.from().count(), 0);
@@ -206,16 +206,33 @@ describe('sparray', () => {
 
   });
 
-  describe('map()', () => {
+  describe('map(mapFn, thisArg)', () => {
 
     it('should call the native method', () => {
-      testNative('map', [1, 2, 3], [1, 2, 3]);
+      testNative('map', [1, 2, 3], [1, 2, 3], sparray.from(1, 2, 3));
     });
 
     it('should transform the elements according to the function', () => {
       deq(sparray.from().map(a => a).toArray(), []);
       deq(sparray.from(1, 2, 3).map(a => a).toArray(), [1, 2, 3]);
       deq(sparray.from(1, 2, 3).map(a => a * 2).toArray(), [2, 4, 6]);
+    });
+
+  });
+
+  describe('reduce(reduceFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('reduce', [1, 2, 3], 1, 1);
+    });
+
+    it('should reduce the elements according to the function', () => {
+      eq(sparray.from(1, 2, 3).reduce((a, b) => a), 1);
+      eq(sparray.from(1, 2, 3).reduce((a, b) => a + b, 5), 11);
+    });
+
+    it('should throw exception if sparray is empty', () => {
+      assert.throws(() => { sparray.from().reduce((a, b) => a + b) });
     });
 
   });
