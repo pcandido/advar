@@ -249,4 +249,23 @@ describe('sparray', () => {
 
   });
 
+
+  describe('flatten(depth)', () => {
+
+    it('should flat nested sparrays or arrays in the main sparray', () => {
+      deq(sparray.from([1, 2], [3, 4]).flatten().toArray(), [1, 2, 3, 4]);
+      deq(sparray.from([1, 2], []).flatten().toArray(), [1, 2]);
+      deq(sparray.from([1, [2]], sparray.from([3, 4])).flatten().toArray(), [1, [2], 3, 4]);
+    });
+
+    it('should flat deep nested sparrays and arrays', () => {
+      deq(sparray.from([1, [2]], sparray.from([3, [[4], 5]])).flatten(0).toArray(), [[1, [2]], sparray.from([3, [[4], 5]])]);
+      deq(sparray.from([1, [2]], sparray.from([3, [[4], 5]])).flatten(1).toArray(), [1, [2], 3, [[4], 5]]);
+      deq(sparray.from([1, [2]], sparray.from([3, [[4], 5]])).flatten(2).toArray(), [1, 2, 3, [4], 5]);
+      deq(sparray.from([1, [2]], sparray.from([3, [[4], 5]])).flatten(3).toArray(), [1, 2, 3, 4, 5]);
+      deq(sparray.from([1, [2]], sparray.from([3, [[4], 5]])).flatten(4).toArray(), [1, 2, 3, 4, 5]);
+    });
+
+  });
+
 });

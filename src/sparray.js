@@ -204,11 +204,37 @@ class Sparray {
       return this._data.reduce(reduceFn);
   }
 
+  /**
+   * Builds a new sparray with only the selected elements by filterFn
+   * @param filterFn 
+   * @param thisArg 
+   */
   filter(filterFn, thisArg) {
     if (typeof thisArg !== 'undefined')
       return from(this._data.filter(filterFn, thisArg));
     else
       return from(this._data.filter(filterFn));
+  }
+
+  /**
+   * Builds a new sparray flatting the nested sparrays and arrays to the main sparray
+   * @param depth how depth the flatten will be applied
+   */
+  flatten(depth) {
+    if (typeof depth === 'undefined') {
+      depth = 1;
+    }
+
+    if (depth <= 0) {
+      return this;
+    }
+
+    const res = from(this._data.reduce((a, b) => {
+      if (b instanceof Sparray) b = b.toArray();
+      return a.concat(b)
+    }, []));
+
+    return res.flatten(depth - 1);
   }
 
   /**
