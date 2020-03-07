@@ -237,5 +237,16 @@ describe('sparray', () => {
 
   });
 
+  describe('filter(filterFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('filter', [1, 2, 3], [1, 3], sparray.from(1, 3));
+    });
+
+    it('should filter the elements according to the function', () => {
+      deq(sparray.from(1, 2, 3).filter(a => a % 2).toArray(), [1, 3]);
+    });
+
+  });
 
 });

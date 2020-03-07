@@ -204,6 +204,13 @@ class Sparray {
       return this._data.reduce(reduceFn);
   }
 
+  filter(filterFn, thisArg) {
+    if (typeof thisArg !== 'undefined')
+      return from(this._data.filter(filterFn, thisArg));
+    else
+      return from(this._data.filter(filterFn));
+  }
+
   /**
    * Remove all the duplicates and create a new sparray of distinct values
    */
