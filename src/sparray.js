@@ -177,7 +177,7 @@ class Sparray {
   }
 
   /**
-   * Build a new sparray transforming the elements according to the mapFn function.
+   * Build a new sparray by transforming the elements according to the mapFn function.
    * @param mapFn transformation function
    * @param thisArg object to be used as this inside mapFn
    */
@@ -214,6 +214,18 @@ class Sparray {
       return from(this._data.filter(filterFn, thisArg));
     else
       return from(this._data.filter(filterFn));
+  }
+
+  /**
+   * Build a new sparray by transforming the elements according to the mapFn function and flatten the result sparrays or arrays.
+   * @param mapFn transformation function
+   * @param thisArg object to be used as this inside mapFn
+   */
+  flatMap(mapFn, thisArg) {
+    if (typeof thisArg !== 'undefined')
+      return from(this._data.map(mapFn, thisArg)).flatten(1);
+    else
+      return from(this._data.map(mapFn)).flatten(1);
   }
 
   /**

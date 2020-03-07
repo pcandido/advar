@@ -249,6 +249,16 @@ describe('sparray', () => {
 
   });
 
+  describe('flatMap(mapFn, thisArg)', () => {
+
+    it('should transform the elements according to the function and flatten the result', () => {
+      deq(sparray.from().flatMap(a => a).toArray(), []);
+      deq(sparray.from(1, 2, 3).flatMap(a => a).toArray(), [1, 2, 3]);
+      deq(sparray.from(1, 2, 3).flatMap(a => sparray.range(a)).toArray(), [0, 0, 1, 0, 1, 2]);
+      deq(sparray.from(1, 2, 3).flatMap(a => sparray.range(a).toArray()).toArray(), [0, 0, 1, 0, 1, 2]);
+    });
+
+  });
 
   describe('flatten(depth)', () => {
 
