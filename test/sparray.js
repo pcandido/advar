@@ -278,4 +278,33 @@ describe('sparray', () => {
 
   });
 
+  describe('join(separator, thisArg)', () => {
+
+    it('should join the elements as a string', () => {
+      eq(sparray.from().join(), '');
+      eq(sparray.from(1, 2, 3).join(), '1,2,3');
+      eq(sparray.from(1, 2, 3).join(', '), '1, 2, 3');
+    });
+
+    it('should join the elements as a string using a function to determine separator', () => {
+      eq(sparray.from().join((fromStart, fromEnd) => ','), '');
+      eq(sparray.from(1, 2, 3).join((fromStart, fromEnd) => fromEnd == 0 ? ' and ' : ', '), '1, 2 and 3');
+    });
+
+  })
+
+  describe('forEach(forEachFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('forEach', [1, 2, 3], undefined, undefined)
+    });
+
+    it('should iterate the elements of sparray', () => {
+      const sp = sparray.from({ a: 1 }, { a: 2 }, { a: 3 });
+      sp.forEach((a, i) => a.a = i);
+      deq(sp, sparray.from({ a: 0 }, { a: 1 }, { a: 2 }));
+    });
+
+  })
+
 });

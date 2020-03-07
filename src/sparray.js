@@ -182,10 +182,7 @@ class Sparray {
    * @param thisArg object to be used as this inside mapFn
    */
   map(mapFn, thisArg) {
-    if (typeof thisArg !== 'undefined')
-      return from(this._data.map(mapFn, thisArg));
-    else
-      return from(this._data.map(mapFn));
+    return from(this._data.map(mapFn, thisArg || this));
   }
 
   /**
@@ -196,10 +193,8 @@ class Sparray {
    * @param thisArg object to be used as this inside reduceFn
    */
   reduce(reduceFn, initialValue, thisArg) {
-    if (typeof thisArg !== 'undefined')
-      return this._data.reduce(reduceFn, initialValue, thisArg);
-    else if (typeof initialValue !== 'undefined')
-      return this._data.reduce(reduceFn, initialValue);
+    if (typeof initialValue !== 'undefined')
+      return this._data.reduce(reduceFn, initialValue, thisArg || this);
     else
       return this._data.reduce(reduceFn);
   }
@@ -210,10 +205,16 @@ class Sparray {
    * @param thisArg 
    */
   filter(filterFn, thisArg) {
-    if (typeof thisArg !== 'undefined')
-      return from(this._data.filter(filterFn, thisArg));
-    else
-      return from(this._data.filter(filterFn));
+    return from(this._data.filter(filterFn, thisArg || this));
+  }
+
+  /**
+   * Iterates over each element of array
+   * @param forEachFn function to be executed over each element
+   * @param thisArg object to be used as this in forEachFn
+   */
+  forEach(forEachFn, thisArg) {
+    return this._data.forEach(forEachFn, thisArg || this);
   }
 
   /**
@@ -254,6 +255,35 @@ class Sparray {
    */
   distinct() {
     return fromSet(new Set(this._data));
+  }
+
+  /**
+   * Join the elements of the sparray in a string using the separator. The default separator is ','.
+   * Separator can be a string or a function which returns a string. The function will receive as parameter
+   * the index of separator from beggining and the index from end. Note the count of separators is the count
+   * of elements minus one.
+   * @param separator the string to be used to separate the elements
+   * @param thisArg object to be used as this inside the function, if it is provided
+   */
+  join(separator, thisArg) {
+    if (typeof separator === 'string') {
+      return this._data.join(separator);
+    } else if (typeof separator === 'function') {
+      separator.bind(thisArg || this);
+      const sepCount = this.length - 1;
+
+      let res = '';
+      this._data.forEach((a, i) => {
+        if (i > 0) {
+          res += separator(i - 1, sepCount - i)
+        }
+        res += a;
+      });
+
+      return res;
+    } else {
+      return this._data.join();
+    }
   }
 
 }
