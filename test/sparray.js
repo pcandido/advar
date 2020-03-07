@@ -1,9 +1,19 @@
 const assert = require('assert');
+const sinon = require('sinon');
 const sparray = require('../src/sparray');
 
 const eq = assert.equal;
 const deq = assert.deepEqual;
 const seq = assert.strictEqual;
+
+const testNative = (func, req, res) => {
+  const callback = sinon.spy();
+  const stub = sinon.stub(Array.prototype, func).returns(res);
+  const arr = sparray.from(req).map(callback);
+  eq(stub.calledOnce, true, 'The native method was not called');
+  deq(arr.toArray(), res);
+  stub.restore();
+};
 
 describe('sparray', () => {
 
@@ -195,5 +205,20 @@ describe('sparray', () => {
     });
 
   });
+
+  describe('map()', () => {
+
+    it('should call the native method', () => {
+      testNative('map', [1, 2, 3], [1, 2, 3]);
+    });
+
+    it('should transform the elements according to the function', () => {
+      deq(sparray.from().map(a => a).toArray(), []);
+      deq(sparray.from(1, 2, 3).map(a => a).toArray(), [1, 2, 3]);
+      deq(sparray.from(1, 2, 3).map(a => a * 2).toArray(), [2, 4, 6]);
+    });
+
+  });
+
 
 });

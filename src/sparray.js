@@ -177,6 +177,15 @@ class Sparray {
   }
 
   /**
+   * Build a new sparray transforming the elements according to the mapFn function.
+   * @param mapFn transformation function
+   * @param thisArg object to be used as this inside mapFn
+   */
+  map(mapFn, thisArg) {
+    return from(this._data.map(mapFn, thisArg))
+  }
+
+  /**
    * Remove all the duplicates and create a new sparray of distinct values
    */
   distinct() {
