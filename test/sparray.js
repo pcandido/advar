@@ -607,7 +607,6 @@ describe('sparray', () => {
       eq(sparray.from(1, 2, 3).toLocaleString(), '1,2,3');
       eq(sparray.from('a', 'b', 'c').toLocaleString(), 'a,b,c');
       eq(sparray.from(new Date(2000, 01, 05, 10, 30, 00)).toLocaleString('en-US'), '2/5/2000, 10:30:00 AM');
-      eq(sparray.from(1, 2, 3).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }), 'R$1.00,R$2.00,R$3.00');
     });
 
   })
