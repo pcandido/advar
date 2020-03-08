@@ -307,4 +307,35 @@ describe('sparray', () => {
 
   })
 
+  describe('some(someFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('some', [1, 2, 3], true, true)
+    });
+
+    it('should return true if some element matches the condiction of someFn', () => {
+      eq(sparray.from().some(a => true), false);
+      eq(sparray.from(1, 2, 3).some(a => true), true);
+      eq(sparray.from(1, 2, 3).some(a => false), false);
+      eq(sparray.from(1, 2, 3).some(a => a === 2), true);
+    });
+
+  })
+
+  describe('every(everyFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('every', [1, 2, 3], true, true)
+    });
+
+    it('should return true if every element matches the condiction of everyFn', () => {
+      eq(sparray.from().every(a => true), true);
+      eq(sparray.from(1, 2, 3).every(a => true), true);
+      eq(sparray.from(1, 2, 3).every(a => false), false);
+      eq(sparray.from(1, 2, 3).every(a => a === 2), false);
+      eq(sparray.from(1, 2, 3).every(a => a < 10), true);
+    });
+
+  })
+
 });

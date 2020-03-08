@@ -286,6 +286,24 @@ class Sparray {
     }
   }
 
+  /**
+   * Returns true if some element produce the result true in the someFn
+   * @param someFn condiction to be test, should return boolean
+   * @param thisArg object to be used as this inside someFn
+   */
+  some(someFn, thisArg) {
+    return this._data.some(someFn, thisArg || this);
+  }
+
+  /**
+    * Returns true if every element produce the result true in the everyFn
+    * @param someFn condiction to be test, should return boolean
+    * @param thisArg object to be used as this inside everyFn
+    */
+  every(everyFn, thisArg) {
+    return this._data.every(everyFn, thisArg || this);
+  }
+
 }
 
 module.exports = {
