@@ -92,6 +92,13 @@ const fromSet = (set) => {
   return new Sparray(Array.from(set))
 }
 
+/**
+ * Determines if the obj is an instance of Sparray
+ * @param obj obj to verify
+ */
+const isSparray = (obj) => {
+  return obj instanceof Sparray;
+}
 
 class Sparray {
 
@@ -113,7 +120,7 @@ class Sparray {
    * Returns the raw data as a native array
    */
   toArray() {
-    return this._data;
+    return [...this._data];
   }
 
   /**
@@ -318,8 +325,28 @@ class Sparray {
     return this._data.every(everyFn, thisArg || this);
   }
 
+  /**
+   * Concats one or more sparrays, arrays or elements to the original sparray.
+   * The result will be a new sparray.
+   * @param toConcat sparrays, arrays or elements to concat
+   */
+  concat(...toConcat) {
+    let data = [...this._data];
+    for (const obj of toConcat) {
+      if (isSparray(obj)) {
+        data = data.concat(obj._data);
+      } else if (Array.isArray(obj)) {
+        data = data.concat(obj);
+      } else {
+        data.push(obj);
+      }
+    }
+
+    return from(data);
+  }
+
 }
 
 module.exports = {
-  from, range, fillOf, fromSet
+  from, range, fillOf, fromSet, isSparray
 }

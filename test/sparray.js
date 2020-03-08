@@ -112,12 +112,34 @@ describe('sparray', () => {
 
   });
 
+  describe('isSparray()', () => {
+
+    it('should return true for sparrays', () => {
+      eq(sparray.isSparray(sparray.from(1, 2, 3)), true);
+      eq(sparray.isSparray(sparray.range(3)), true);
+    });
+
+    it('should return false for non-sparrays', () => {
+      eq(sparray.isSparray(1), false);
+      eq(sparray.isSparray([1, 2, 3]), false);
+    });
+
+  });
+
   describe('toArray()', () => {
 
     it('should return the raw stored data', () => {
       const a = sparray.from();
       a._data = [1, 2, 3];  //hard-coded to assert toArray without depends to the constructor
       deq(a.toArray(), [1, 2, 3]);
+    });
+
+    it('changes on returned raw data should not impact the sparray', () => {
+      const a = sparray.from(1, 2, 3);
+      const b = a.toArray();
+      b.push(4);
+      deq(a.toArray(), [1, 2, 3]);
+      deq(b, [1, 2, 3, 4]);
     });
 
   });
@@ -356,5 +378,37 @@ describe('sparray', () => {
     });
 
   })
+
+  describe('concat(...toCpncat)', () => {
+
+    it('should concat other sparrays', () => {
+      deq(sparray.from(1, 2, 3).concat().toArray(), [1, 2, 3]);
+      deq(sparray.from(1, 2, 3).concat(sparray.from()).toArray(), [1, 2, 3]);
+      deq(sparray.from(1, 2, 3).concat(sparray.from(4, 5, 6)).toArray(), [1, 2, 3, 4, 5, 6]);
+      deq(sparray.from(1, 2, 3).concat(sparray.from(4), sparray.from(5, 6)).toArray(), [1, 2, 3, 4, 5, 6]);
+    });
+
+    it('should concat other arrays', () => {
+      deq(sparray.from(1, 2, 3).concat([]).toArray(), [1, 2, 3]);
+      deq(sparray.from(1, 2, 3).concat([4, 5, 6]).toArray(), [1, 2, 3, 4, 5, 6]);
+      deq(sparray.from(1, 2, 3).concat([4], [5, 6]).toArray(), [1, 2, 3, 4, 5, 6]);
+    });
+
+    it('should concat other elements', () => {
+      deq(sparray.from(1, 2, 3).concat(4, 5, 6).toArray(), [1, 2, 3, 4, 5, 6]);
+      deq(sparray.from(1, 2, 3).concat(4, [5, 6]).toArray(), [1, 2, 3, 4, 5, 6]);
+    });
+
+    it('should not change the original sparray', () => {
+      const a = sparray.from(1, 2, 3);
+      const b = sparray.from(4, 5, 6);
+      const c = a.concat(b);
+
+      deq(a.toArray(), [1, 2, 3])
+      deq(b.toArray(), [4, 5, 6])
+      deq(c.toArray(), [1, 2, 3, 4, 5, 6])
+    });
+
+  });
 
 });
