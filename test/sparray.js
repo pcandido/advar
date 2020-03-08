@@ -229,10 +229,29 @@ describe('sparray', () => {
     it('should reduce the elements according to the function', () => {
       eq(sparray.from(1, 2, 3).reduce((a, b) => a), 1);
       eq(sparray.from(1, 2, 3).reduce((a, b) => a + b, 5), 11);
+      eq(sparray.from(120, 20, 2).reduce((a, b) => a / b), 3);
     });
 
     it('should throw exception if sparray is empty', () => {
       assert.throws(() => { sparray.from().reduce((a, b) => a + b) });
+    });
+
+  });
+
+  describe('reduceRight(reduceFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('reduceRight', [1, 2, 3], 1, 1);
+    });
+
+    it('should reduce the elements according to the function', () => {
+      eq(sparray.from(1, 2, 3).reduceRight((a, b) => a), 3);
+      eq(sparray.from(1, 2, 3).reduceRight((a, b) => a + b, 5), 11);
+      eq(sparray.from(2, 20, 120).reduceRight((a, b) => a / b), 3);
+    });
+
+    it('should throw exception if sparray is empty', () => {
+      assert.throws(() => { sparray.from().reduceRight((a, b) => a + b) });
     });
 
   });

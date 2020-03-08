@@ -200,6 +200,20 @@ class Sparray {
   }
 
   /**
+   * Aggregate the elements of sparray pair-by-pair, from the right to the left, according to the reduceFn, 
+   * accumulating the aggregation until last element.
+   * @param reduceFn aggragation (reducer) function
+   * @param initialValue to initialize the accumulated value
+   * @param thisArg object to be used as this inside reduceFn
+   */
+  reduceRight(reduceFn, initialValue, thisArg) {
+    if (typeof initialValue !== 'undefined')
+      return this._data.reduceRight(reduceFn, initialValue, thisArg || this);
+    else
+      return this._data.reduceRight(reduceFn);
+  }
+
+  /**
    * Builds a new sparray with only the selected elements by filterFn
    * @param filterFn 
    * @param thisArg 
