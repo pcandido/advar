@@ -411,4 +411,35 @@ describe('sparray', () => {
 
   });
 
+  describe('find(findFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('find', [1, 2, 3], 2, 2)
+    });
+
+    it('should return the first element that satisfy the findFn', () => {
+      seq(sparray.from().find(a => true), undefined);
+      seq(sparray.from(1, 2, 3).find(a => true), 1);
+      seq(sparray.from(1, 2, 3).find(a => false), undefined);
+      seq(sparray.from(1, 2, 3).find(a => a === 2), 2);
+    });
+
+  })
+
+  describe('findIndex(findFn, thisArg)', () => {
+
+    it('should call the native method', () => {
+      testNative('findIndex', [1, 2, 3], 2, 2)
+    });
+
+    it('should return the index of the first element that satisfy the findFn', () => {
+      eq(sparray.from().findIndex(a => true), -1);
+      eq(sparray.from(1, 2, 3).findIndex(a => true), 0);
+      eq(sparray.from(1, 2, 3).findIndex(a => false), -1);
+      eq(sparray.from(1, 2, 3).findIndex(a => a === 2), 1);
+    });
+
+  })
+
+
 });

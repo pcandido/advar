@@ -318,7 +318,7 @@ class Sparray {
 
   /**
     * Returns true if every element produce the result true in the everyFn
-    * @param someFn condiction to be test, should return boolean
+    * @param everyFn condiction to be test, should return boolean
     * @param thisArg object to be used as this inside everyFn
     */
   every(everyFn, thisArg) {
@@ -344,6 +344,25 @@ class Sparray {
 
     return from(data);
   }
+
+  /**
+   * Returns the first element that satisfy the condiction of findFn
+   * @param findFn condiction to be test, should return boolean
+   * @param thisArg object to be used as this inside everyFn
+   */
+  find(findFn, thisArg) {
+    return this._data.find(findFn, thisArg || this);
+  }
+
+  /**
+   * Returns the index of the first element that satisfy the condiction of findFn
+   * @param findFn condiction to be test, should return boolean
+   * @param thisArg object to be used as this inside everyFn
+   */
+  findIndex(findFn, thisArg) {
+    return this._data.findIndex(findFn, thisArg || this);
+  }
+
 
 }
 
