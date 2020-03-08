@@ -522,7 +522,7 @@ describe('sparray', () => {
 
   })
 
-  describe('reverse(value)', () => {
+  describe('reverse()', () => {
 
     it('should build a new sparray with the elements in reverse order', () => {
       deq(sparray.from().reverse().toArray(), []);
@@ -535,6 +535,27 @@ describe('sparray', () => {
 
       deq(a.toArray(), [1, 2, 3]);
       deq(b.toArray(), [3, 2, 1]);
+    });
+
+  })
+
+  describe('sort(sortFn, thisArg)', () => {
+
+    it('should build a new sparray with the elements sorted', () => {
+      deq(sparray.from().sort().toArray(), []);
+      deq(sparray.from(3, 2, 1).sort().toArray(), [1, 2, 3]);
+    });
+
+    it('should sort by a custom sortFn', () => {
+      deq(sparray.from(1, 2, 3).sort((a, b) => b - a).toArray(), [3, 2, 1]);
+    });
+
+    it('should not chage the original sparray', () => {
+      const a = sparray.from(3, 2, 1);
+      const b = a.sort();
+
+      deq(a.toArray(), [3, 2, 1]);
+      deq(b.toArray(), [1, 2, 3]);
     });
 
   })

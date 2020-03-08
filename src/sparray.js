@@ -345,7 +345,7 @@ class Sparray {
    * @param toConcat sparrays, arrays or elements to concat
    */
   concat(...toConcat) {
-    let data = [...this._data];
+    let data = this.toArray();
     for (const obj of toConcat) {
       if (isSparray(obj)) {
         data = data.concat(obj._data);
@@ -406,7 +406,18 @@ class Sparray {
    * Builds a new sparray with the reverse order
    */
   reverse() {
-    return from([...this._data].reverse());
+    return from(this.toArray().reverse());
+  }
+
+  /**
+  * Builds a new sparray with the elements sorted by either a natural order or a custom sortFn
+  */
+  sort(sortFn, thisArg) {
+    if (typeof sortFn !== 'undefined') {
+      return from(this.toArray().sort(sortFn, thisArg));
+    } else {
+      return from(this.toArray().sort())
+    }
   }
 
   /**
