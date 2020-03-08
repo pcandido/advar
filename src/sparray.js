@@ -130,16 +130,20 @@ class Sparray {
     return this._data;
   }
 
+  _resolveIndex(index) {
+    if (index < 0)
+      return this.length + index;
+    else
+      return index;
+  }
+
   /**
    * Gets an element from Sparray by index. Negative indices will get elements backwards. Out of bound indices will return undefined.
    *
    * @param index is the position from where the element should be gotten
    */
   get(index) {
-    if (index < 0)
-      index = this._data.length + index;
-
-    return this._data[index];
+    return this._data[this._resolveIndex(index)];
   }
 
   /**
@@ -411,6 +415,8 @@ class Sparray {
 
   /**
   * Builds a new sparray with the elements sorted by either a natural order or a custom sortFn
+  * @param sortFn otional custom sort condition
+  * @param thisArg object to be used as this inside sortFn
   */
   sort(sortFn, thisArg) {
     if (typeof sortFn !== 'undefined') {
@@ -418,6 +424,18 @@ class Sparray {
     } else {
       return from(this.toArray().sort())
     }
+  }
+
+  /**
+   * Builds a new sparray with the elements sliced from the original one. Negative indices could be used to backward indexing. The end index is optional.
+   * @param startIndex 
+   * @param endIndex 
+   */
+  slice(startIndex, endIndex) {
+    if (typeof endIndex == 'undefined')
+      return from(this._data.slice(this._resolveIndex(startIndex)))
+    else
+      return from(this._data.slice(this._resolveIndex(startIndex), this._resolveIndex(endIndex)));
   }
 
   /**

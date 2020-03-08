@@ -560,6 +560,26 @@ describe('sparray', () => {
 
   })
 
+  describe('slice(start, end)', () => {
+
+    it('should build a new sparray with the elements sliced', () => {
+      deq(sparray.from().slice(1, 2).toArray(), []);
+      deq(sparray.from(1, 2, 3, 4, 5).slice(1, 3).toArray(), [2, 3]);
+    });
+
+    it('should accept negative indexes to backward indexing', () => {
+      deq(sparray.from(1, 2, 3, 4, 5).slice(1, -1).toArray(), [2, 3, 4]);
+      deq(sparray.from(1, 2, 3, 4, 5).slice(-3, -1).toArray(), [3, 4]);
+      deq(sparray.from(1, 2, 3, 4, 5).slice(-3, 5).toArray(), [3, 4, 5]);
+    });
+
+    it('should accept just one parameter', () => {
+      deq(sparray.from(1, 2, 3, 4, 5).slice(1).toArray(), [2, 3, 4, 5]);
+      deq(sparray.from(1, 2, 3, 4, 5).slice(-3).toArray(), [3, 4, 5]);
+    });
+
+  })
+
   describe('toString()', () => {
 
     it('should call the native method', () => {
