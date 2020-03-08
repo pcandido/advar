@@ -522,6 +522,23 @@ describe('sparray', () => {
 
   })
 
+  describe('reverse(value)', () => {
+
+    it('should build a new sparray with the elements in reverse order', () => {
+      deq(sparray.from().reverse().toArray(), []);
+      deq(sparray.from(1, 2, 3).reverse().toArray(), [3, 2, 1]);
+    });
+
+    it('the original sparray should not be changed', () => {
+      const a = sparray.from(1, 2, 3);
+      const b = a.reverse();
+
+      deq(a.toArray(), [1, 2, 3]);
+      deq(b.toArray(), [3, 2, 1]);
+    });
+
+  })
+
   describe('toString()', () => {
 
     it('should call the native method', () => {

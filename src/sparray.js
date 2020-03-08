@@ -403,6 +403,13 @@ class Sparray {
   }
 
   /**
+   * Builds a new sparray with the reverse order
+   */
+  reverse() {
+    return from([...this._data].reverse());
+  }
+
+  /**
    * Returns the string representation of the sparray and its elements
    */
   toString() {
