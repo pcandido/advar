@@ -5,6 +5,8 @@ const sparray = require('../src/sparray');
 const eq = assert.equal;
 const deq = assert.deepEqual;
 const seq = assert.strictEqual;
+const eqt = (expression) => eq(expression, true);
+const eqf = (expression) => eq(expression, false);
 
 const testNative = (func, req, res, resCompare) => {
   const callback = sinon.spy();
@@ -115,13 +117,13 @@ describe('sparray', () => {
   describe('isSparray()', () => {
 
     it('should return true for sparrays', () => {
-      eq(sparray.isSparray(sparray.from(1, 2, 3)), true);
-      eq(sparray.isSparray(sparray.range(3)), true);
+      eqt(sparray.isSparray(sparray.from(1, 2, 3)));
+      eqt(sparray.isSparray(sparray.range(3)));
     });
 
     it('should return false for non-sparrays', () => {
-      eq(sparray.isSparray(1), false);
-      eq(sparray.isSparray([1, 2, 3]), false);
+      eqf(sparray.isSparray(1));
+      eqf(sparray.isSparray([1, 2, 3]));
     });
 
   });
@@ -175,7 +177,7 @@ describe('sparray', () => {
       const ir = sp.keys();
       eq(ir.next().value, 0);
       eq(ir.next().value, 1);
-      eq(ir.next().done, false);
+      eqf(ir.next().done);
     });
 
   });
@@ -191,7 +193,7 @@ describe('sparray', () => {
       const ir = sp.values();
       eq(ir.next().value, 1);
       eq(ir.next().value, 2);
-      eq(ir.next().done, false);
+      eqf(ir.next().done);
     });
 
   });
@@ -207,7 +209,7 @@ describe('sparray', () => {
       const ir = sp.entries();
       deq(ir.next().value, [0, 1]);
       deq(ir.next().value, [1, 2]);
-      eq(ir.next().done, false);
+      eqf(ir.next().done);
     });
 
   });
@@ -391,10 +393,10 @@ describe('sparray', () => {
     });
 
     it('should return true if some element matches the condiction of someFn', () => {
-      eq(sparray.from().some(a => true), false);
-      eq(sparray.from(1, 2, 3).some(a => true), true);
-      eq(sparray.from(1, 2, 3).some(a => false), false);
-      eq(sparray.from(1, 2, 3).some(a => a === 2), true);
+      eqf(sparray.from().some(a => true));
+      eqt(sparray.from(1, 2, 3).some(a => true));
+      eqf(sparray.from(1, 2, 3).some(a => false));
+      eqt(sparray.from(1, 2, 3).some(a => a === 2));
     });
 
   })
@@ -406,11 +408,11 @@ describe('sparray', () => {
     });
 
     it('should return true if every element matches the condiction of everyFn', () => {
-      eq(sparray.from().every(a => true), true);
-      eq(sparray.from(1, 2, 3).every(a => true), true);
-      eq(sparray.from(1, 2, 3).every(a => false), false);
-      eq(sparray.from(1, 2, 3).every(a => a === 2), false);
-      eq(sparray.from(1, 2, 3).every(a => a < 10), true);
+      eqt(sparray.from().every(a => true));
+      eqt(sparray.from(1, 2, 3).every(a => true));
+      eqf(sparray.from(1, 2, 3).every(a => false));
+      eqf(sparray.from(1, 2, 3).every(a => a === 2));
+      eqt(sparray.from(1, 2, 3).every(a => a < 10));
     });
 
   })
@@ -514,10 +516,10 @@ describe('sparray', () => {
     });
 
     it('should return true if the sparray contains the value', () => {
-      eq(sparray.from().includes(1), false);
-      eq(sparray.from(1, 2, 3).includes(1), true);
-      eq(sparray.from(1, 2, 3).includes(2), true);
-      eq(sparray.from(1, 2, 3).includes(5), false);
+      eqf(sparray.from().includes(1));
+      eqt(sparray.from(1, 2, 3).includes(1));
+      eqt(sparray.from(1, 2, 3).includes(2));
+      eqf(sparray.from(1, 2, 3).includes(5));
     });
 
   })
@@ -609,5 +611,54 @@ describe('sparray', () => {
     });
 
   })
+
+  describe('isNumeric()', () => {
+
+    it('should return true if all the elements are numeric', () => {
+      eqt(sparray.from().isNumeric());
+      eqt(sparray.from(1).isNumeric());
+      eqt(sparray.from(1, 2, 3).isNumeric());
+    });
+
+    it('should return NaN if there is a non-number element', () => {
+      eqf(sparray.from(1, 2, '3').isNumeric());
+      eqf(sparray.from(1, 2, [3]).isNumeric());
+      eqf(sparray.from(1, 2, { a: 3 }).isNumeric());
+    });
+
+  });
+
+
+  describe('sum()', () => {
+
+    it('should sum the elements of the sparray', () => {
+      eq(sparray.from().sum(), 0);
+      eq(sparray.from(1).sum(), 1);
+      eq(sparray.from(2, 2, 5, 1).sum(), 10);
+    });
+
+    it('should return NaN if there is a non-number element', () => {
+      eqt(isNaN(sparray.from(1, 2, '3').sum()));
+      eqt(isNaN(sparray.from(1, 2, [3]).sum()));
+      eqt(isNaN(sparray.from(1, 2, { a: 3 }).sum()));
+    });
+
+  });
+
+  describe('avg()', () => {
+
+    it('should calculate average of the elements of the sparray', () => {
+      eq(sparray.from().avg(), undefined);
+      eq(sparray.from(1).avg(), 1);
+      eq(sparray.from(1, 2, 3, 4).avg(), 2.5);
+    });
+
+    it('should return NaN if there is a non-number element', () => {
+      eqt(isNaN(sparray.from(1, 2, '3').avg()));
+      eqt(isNaN(sparray.from(1, 2, [3]).avg()));
+      eqt(isNaN(sparray.from(1, 2, { a: 3 }).avg()));
+    });
+
+  });
 
 });

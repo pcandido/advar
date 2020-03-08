@@ -452,6 +452,30 @@ class Sparray {
     return this._data.toLocaleString(locales, options);
   }
 
+  /**
+   * Returns true if all the elements of the array is numeric
+   */
+  isNumeric() {
+    return this.every(a => typeof a === 'number');
+  }
+
+  /**
+   * Sums all the elements of the sparray. If there is a non-numeric element, the return will be NaN
+   */
+  sum() {
+    if (!this.isNumeric()) return NaN;
+    return this.reduce((a, b) => a + b, 0);
+  }
+
+  /**
+   * Calculates the average of all the elements of the sparray. If there is a non-numeric element, the return will be NaN
+   */
+  avg() {
+    if (this.length === 0) return undefined;
+    if (!this.isNumeric()) return NaN;
+    return this.sum() / this.length;
+  }
+
 }
 
 module.exports = {
