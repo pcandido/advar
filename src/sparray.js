@@ -387,6 +387,21 @@ class Sparray {
   includes(value) {
     return this._data.includes(value);
   }
+
+  /**
+   * Returns the string representation of the sparray and its elements
+   */
+  toString() {
+    return this._data.toString();
+  }
+
+  /**
+   * Returns the string localized representation of the sparray and its elements
+   */
+  toLocaleString(locales, options) {
+    return this._data.toLocaleString(locales, options);
+  }
+
 }
 
 module.exports = {

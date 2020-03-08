@@ -486,4 +486,34 @@ describe('sparray', () => {
 
   })
 
+  describe('toString()', () => {
+
+    it('should call the native method', () => {
+      testNative('toString', [1, 2, 3], '[1,2,3]', '[1,2,3]')
+    });
+
+    it('should return the string representation of sparray and its elements', () => {
+      eq(sparray.from().toString(), '');
+      eq(sparray.from(1, 2, 3).toString(), '1,2,3');
+      eq(sparray.from('a', 'b', 'c').toString(), 'a,b,c');
+    });
+
+  })
+
+  describe('toLocaleString(locales,options)', () => {
+
+    it('should call the native method', () => {
+      testNative('toLocaleString', [1, 2, 3], '[1,2,3]', '[1,2,3]')
+    });
+
+    it('should return the string representation of sparray and its elements', () => {
+      eq(sparray.from().toLocaleString(), '');
+      eq(sparray.from(1, 2, 3).toLocaleString(), '1,2,3');
+      eq(sparray.from('a', 'b', 'c').toLocaleString(), 'a,b,c');
+      eq(sparray.from(new Date(2000, 01, 05, 10, 30, 00)).toLocaleString('en-US'), '2/5/2000, 10:30:00 AM');
+      eq(sparray.from(1, 2, 3).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }), 'R$1.00,R$2.00,R$3.00');
+    });
+
+  })
+
 });
