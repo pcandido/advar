@@ -143,10 +143,24 @@ class Sparray {
   }
 
   /**
-   * Returns an iteratior of the sparray.
+   * Returns a keys iteratior of the sparray.
+   */
+  keys() {
+    return this._data.keys();
+  }
+
+  /**
+   * Returns a values iteratior of the sparray.
    */
   values() {
     return this._data.values();
+  }
+
+  /**
+   * Returns an entry iteratior of the sparray.
+   */
+  entries() {
+    return this._data.entries();
   }
 
   /**

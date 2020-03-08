@@ -164,13 +164,49 @@ describe('sparray', () => {
     });
   });
 
+  describe('keys()', () => {
+
+    it('should call the native method', () => {
+      testNative('keys', [1, 2, 3], undefined, undefined);
+    });
+
+    it('should return an iterator', () => {
+      const sp = sparray.from(1, 2, 3, 4, 5);
+      const ir = sp.keys();
+      eq(ir.next().value, 0);
+      eq(ir.next().value, 1);
+      eq(ir.next().done, false);
+    });
+
+  });
+
   describe('values()', () => {
+
+    it('should call the native method', () => {
+      testNative('values', [1, 2, 3], undefined, undefined);
+    });
 
     it('should return an iterator', () => {
       const sp = sparray.from(1, 2, 3, 4, 5);
       const ir = sp.values();
       eq(ir.next().value, 1);
       eq(ir.next().value, 2);
+      eq(ir.next().done, false);
+    });
+
+  });
+
+  describe('entries()', () => {
+
+    it('should call the native method', () => {
+      testNative('entries', [1, 2, 3], undefined, undefined);
+    });
+
+    it('should return an iterator', () => {
+      const sp = sparray.from(1, 2, 3, 4, 5);
+      const ir = sp.entries();
+      deq(ir.next().value, [0, 1]);
+      deq(ir.next().value, [1, 2]);
       eq(ir.next().done, false);
     });
 
