@@ -441,5 +441,34 @@ describe('sparray', () => {
 
   })
 
+  describe('indexOf(searchElement)', () => {
+
+    it('should call the native method', () => {
+      testNative('indexOf', [1, 2, 3], 2, 2)
+    });
+
+    it('should return the first index of the searchElement in sparray', () => {
+      eq(sparray.from().indexOf(1), -1);
+      eq(sparray.from(1, 2, 3, 1, 2, 3).indexOf(1), 0);
+      eq(sparray.from(1, 2, 3, 1, 2, 3).indexOf(2), 1);
+      eq(sparray.from(1, 2, 3, 1, 2, 3).indexOf(5), -1);
+    });
+
+  })
+
+  describe('lastIndexOf(searchElement)', () => {
+
+    it('should call the native method', () => {
+      testNative('lastIndexOf', [1, 2, 3], 2, 2)
+    });
+
+    it('should return the first index of the searchElement in sparray', () => {
+      eq(sparray.from().lastIndexOf(1), -1);
+      eq(sparray.from(1, 2, 3, 1, 2, 3).lastIndexOf(1), 3);
+      eq(sparray.from(1, 2, 3, 1, 2, 3).lastIndexOf(2), 4);
+      eq(sparray.from(1, 2, 3, 1, 2, 3).lastIndexOf(5), -1);
+    });
+
+  })
 
 });

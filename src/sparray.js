@@ -346,7 +346,7 @@ class Sparray {
   }
 
   /**
-   * Returns the first element that satisfy the condiction of findFn
+   * Returns the first element that satisfy the condiction of findFn, or undefined if no element satisfy
    * @param findFn condiction to be test, should return boolean
    * @param thisArg object to be used as this inside everyFn
    */
@@ -355,7 +355,7 @@ class Sparray {
   }
 
   /**
-   * Returns the index of the first element that satisfy the condiction of findFn
+   * Returns the index of the first element that satisfy the condiction of findFn, or -1 if no element satisfy
    * @param findFn condiction to be test, should return boolean
    * @param thisArg object to be used as this inside everyFn
    */
@@ -363,6 +363,22 @@ class Sparray {
     return this._data.findIndex(findFn, thisArg || this);
   }
 
+
+  /**
+   * Returns the first index of the element equals to the searchElement, or -1 if not found
+   * @param searchElement value to search
+   */
+  indexOf(searchElement) {
+    return this._data.indexOf(searchElement);
+  }
+
+  /**
+   * Returns the last index of the element equals to the searchElement, or -1 if not found
+   * @param searchElement value to search
+   */
+  lastIndexOf(searchElement) {
+    return this._data.lastIndexOf(searchElement);
+  }
 
 }
 
