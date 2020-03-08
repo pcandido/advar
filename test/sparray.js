@@ -471,4 +471,19 @@ describe('sparray', () => {
 
   })
 
+  describe('includes(value)', () => {
+
+    it('should call the native method', () => {
+      testNative('includes', [1, 2, 3], true, true)
+    });
+
+    it('should return true if the sparray contains the value', () => {
+      eq(sparray.from().includes(1), false);
+      eq(sparray.from(1, 2, 3).includes(1), true);
+      eq(sparray.from(1, 2, 3).includes(2), true);
+      eq(sparray.from(1, 2, 3).includes(5), false);
+    });
+
+  })
+
 });

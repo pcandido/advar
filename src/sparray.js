@@ -380,6 +380,13 @@ class Sparray {
     return this._data.lastIndexOf(searchElement);
   }
 
+  /**
+   * Returns true if the sparray constains the value, and false otherwise
+   * @param value value to search
+   */
+  includes(value) {
+    return this._data.includes(value);
+  }
 }
 
 module.exports = {
