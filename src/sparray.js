@@ -476,6 +476,42 @@ class Sparray {
     return this.sum() / this.length;
   }
 
+  /**
+   * Indexes the elements by a key. The result is an object where the keys are providen by keyFn and the values are the own elements. 
+   * If there are duplicate keys, the last element that generated that key will be preserved. 
+   * @see groupBy
+   * @param keyFn function to provide a key by element
+   * @param thisArg object to be used as this inside keyFn
+   */
+  indexBy(keyFn, thisArg) {
+    keyFn.bind(thisArg || this);
+    return this._data.reduce((a, b) => {
+      a[keyFn(b)] = b;
+      return a;
+    }, {});
+  }
+
+  /**
+   * Groups the elements by a key. The result is an object where the keys are providen by keyFn and the values are grouped as a sparray. 
+   * @see indexBy
+   * @param keyFn function to provide a key by element
+   * @param thisArg object to be used as this inside keyFn
+   */
+  groupBy(keyFn, thisArg) {
+    keyFn.bind(thisArg || this);
+    const grouped = this._data.reduce((a, b) => {
+      const key = keyFn(b);
+      (a[key] = a[key] || []).push(b);
+      return a;
+    }, {});
+
+    for (const p of Object.keys(grouped)) {
+      grouped[p] = from(grouped[p]);
+    }
+
+    return grouped;
+  }
+
 }
 
 module.exports = {

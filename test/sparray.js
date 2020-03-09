@@ -660,4 +660,33 @@ describe('sparray', () => {
 
   });
 
+  describe('indexBy(keyFn, thisArg)', () => {
+
+    it('should index elements by the key returned by keyFn', () => {
+      deq(sparray.from().indexBy(a => a), {});
+      deq(sparray.from(1, 2, 3).indexBy(a => a), { 1: 1, 2: 2, 3: 3 });
+      deq(sparray.from({ a: 1 }, { a: 2 }, { a: 3 }).indexBy(a => a.a), { 1: { a: 1 }, 2: { a: 2 }, 3: { a: 3 } });
+    });
+
+    it('should not repeat elements, the last element of the same index should replace any other', () => {
+      deq(sparray.from({ a: 1 }, { a: 2 }, { a: 3 }, { b: 2 }).indexBy(a => a.a || a.b), { 1: { a: 1 }, 2: { b: 2 }, 3: { a: 3 } });
+    });
+
+  });
+
+  describe('groupBy(keyFn, thisArg)', () => {
+
+    it('should group elements by the key returned by keyFn', () => {
+      deq(sparray.from().groupBy(a => a), {});
+      deq(sparray.from(1, 2, 3).groupBy(a => a), { 1: sparray.from(1), 2: sparray.from(2), 3: sparray.from(3) });
+      deq(sparray.from({ a: 1 }, { a: 2 }, { a: 3 }).groupBy(a => a.a), { 1: sparray.from({ a: 1 }), 2: sparray.from({ a: 2 }), 3: sparray.from({ a: 3 }) });
+    });
+
+    it('should put the elements that repeat keys together', () => {
+      deq(sparray.from({ a: 1 }, { a: 2 }, { a: 3 }, { b: 2 }).groupBy(a => a.a || a.b), { 1: sparray.from({ a: 1 }), 2: sparray.from({ a: 2 }, { b: 2 }), 3: sparray.from({ a: 3 }) });
+      deq(sparray.from(1, 2, 3, 4, 5, 6).groupBy(a => a % 3), { 0: sparray.from(3, 6), 1: sparray.from(1, 4), 2: sparray.from(2, 5) });
+    });
+
+  });
+
 });
