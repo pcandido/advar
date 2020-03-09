@@ -549,6 +549,13 @@ class Sparray {
     return from(partitions);
   }
 
+  /**
+   * Builds a new sparray with the same elements
+   */
+  clone() {
+    return from([...this._data]);
+  }
+
 }
 
 module.exports = {

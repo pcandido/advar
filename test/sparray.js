@@ -728,4 +728,13 @@ describe('sparray', () => {
 
   });
 
+  describe('clone()', () => {
+
+    it('should clone the sparray', () => {
+      deq(sparray.from().clone().toArray(), []);
+      deq(sparray.from(1, 2, 3, 4).clone().toArray(), [1, 2, 3, 4]);
+    });
+
+  });
+
 });
