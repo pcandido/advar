@@ -703,4 +703,29 @@ describe('sparray', () => {
 
   });
 
+  describe('sliding(size, step)', () => {
+
+    const data = sparray.from(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+    it('should create partitions of the entered size', () => {
+      deq(sparray.from().sliding(3).toArray(), []);
+      deq(data.sliding(1).map(a => a.toArray()).toArray(), [[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]]);
+      deq(data.sliding(2).map(a => a.toArray()).toArray(), [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]]);
+      deq(data.sliding(3).map(a => a.toArray()).toArray(), [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]);
+    });
+
+    it('should create partitions with the specified step', () => {
+      deq(data.sliding(2, 1).map(a => a.toArray()).toArray(), [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]);
+      deq(data.sliding(8, 5).map(a => a.toArray()).toArray(), [[1, 2, 3, 4, 5, 6, 7, 8], [6, 7, 8, 9, 10]]);
+    });
+
+    it('should throw error if size of step < 1', () => {
+      assert.throws(() => data.sliding(0));
+      assert.throws(() => data.sliding(-5));
+      assert.throws(() => data.sliding(5, 0));
+      assert.throws(() => data.sliding(5, -5));
+    });
+
+  });
+
 });

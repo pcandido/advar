@@ -527,6 +527,28 @@ class Sparray {
     return this._data.length > 0;
   }
 
+  /**
+   * Partitions the sparray in batches of size. If step is providen, it determines the step to the next batch.
+   * @param size the size of partition
+   * @param step how many steps to the next partition, by default is the same of size
+   */
+  sliding(size, step) {
+    if (size < 1) throw new Error('Size must be a positive integer');
+
+    if (typeof step === 'undefined') {
+      step = size;
+    }
+
+    if (step < 1) throw new Error('Step must be a positive integer');
+
+    const partitions = [];
+    for (let i = 0; i - step + size < this._data.length; i += step) {
+      partitions.push(this.slice(i, i + size));
+    }
+
+    return from(partitions);
+  }
+
 }
 
 module.exports = {
