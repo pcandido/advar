@@ -512,6 +512,21 @@ class Sparray {
     return grouped;
   }
 
+  /**
+   * Returns true if the sparray is empty and false otherwise
+   */
+  isEmpty() {
+    return this._data.length === 0;
+  }
+
+
+  /**
+   * Returns false if the sparray is empty and true otherwise
+   */
+  isNotEmpty() {
+    return this._data.length > 0;
+  }
+
 }
 
 module.exports = {

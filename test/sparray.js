@@ -689,4 +689,18 @@ describe('sparray', () => {
 
   });
 
+  describe('isEmpty()', () => {
+
+    it('should return true for empty sparrays', () => eqt(sparray.from().isEmpty()));
+    it('should return false for non empty sparrays', () => eqf(sparray.from(1).isEmpty()));
+
+  });
+
+  describe('isNotEmpty()', () => {
+
+    it('should return false for empty sparrays', () => eqf(sparray.from().isNotEmpty()));
+    it('should return true for non empty sparrays', () => eqt(sparray.from(1).isNotEmpty()));
+
+  });
+
 });
