@@ -262,10 +262,18 @@ class Sparray {
    * @param thisArg object to be used as this inside mapFn
    */
   flatMap(mapFn, thisArg) {
-    if (typeof thisArg !== 'undefined')
-      return from(this._data.map(mapFn, thisArg)).flatten(1);
-    else
-      return from(this._data.map(mapFn)).flatten(1);
+    mapFn.bind(thisArg || this);
+
+    let flatted = [];
+    for (const i in this._data) {
+      const mapped = mapFn(this._data[i], i, this);
+      if (isSparray(mapped)) {
+        flatted = flatted.concat(mapped._data);
+      } else {
+        flatted = flatted.concat(mapped);
+      }
+    }
+    return from(flatted);
   }
 
   /**
