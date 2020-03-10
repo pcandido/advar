@@ -492,13 +492,20 @@ class Sparray {
   }
 
   /**
-   * Groups the elements by a key. The result is an object where the keys are providen by keyFn and the values are grouped as a sparray. 
+   * Groups the elements by a key. The result is an object where the keys are providen by keyFn and the values are grouped as a sparray.
+   * It is possible to handle the groupd elements (as sparrays) by valuesFn
    * @see indexBy
    * @param keyFn function to provide a key by element
+   * @param valuesFn handle the sparray of the grouped elements
    * @param thisArg object to be used as this inside keyFn
    */
-  groupBy(keyFn, thisArg) {
+  groupBy(keyFn, valuesFn, thisArg) {
+    if (typeof valuesFn === 'undefined')
+      valuesFn = a => a;
+
     keyFn.bind(thisArg || this);
+    valuesFn.bind(thisArg || this);
+
     const grouped = this._data.reduce((a, b) => {
       const key = keyFn(b);
       (a[key] = a[key] || []).push(b);
@@ -506,7 +513,7 @@ class Sparray {
     }, {});
 
     for (const p of Object.keys(grouped)) {
-      grouped[p] = from(grouped[p]);
+      grouped[p] = valuesFn(from(grouped[p]));
     }
 
     return grouped;
