@@ -673,6 +673,13 @@ class Sparray {
     }
   }
 
+  /**
+   * Maps each element to an object containing the index and the value
+   */
+  enumerate() {
+    return this.map((value, index) => ({ index, value }));
+  }
+
 }
 
 module.exports = {

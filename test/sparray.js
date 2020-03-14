@@ -889,4 +889,13 @@ describe('sparray', () => {
 
   });
 
+  describe('enumerate()', () => {
+
+    it('should return for each element the index and the value', () => {
+      deq(sparray.from().enumerate().toArray(), []);
+      deq(sparray.from('a', 'b', 'c').enumerate().toArray(), [{ index: 0, value: 'a' }, { index: 1, value: 'b' }, { index: 2, value: 'c' }]);
+    });
+
+  });
+
 });
