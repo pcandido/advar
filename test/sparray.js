@@ -898,4 +898,30 @@ describe('sparray', () => {
 
   });
 
+  describe('zip(...arrays)', () => {
+
+    const sa = sparray.from(1, 2, 3);
+    const sb = sparray.from('a', 'b', 'c');
+    const sc = sparray.from(true, true, false);
+    const sd = sparray.from(0);
+    const se = sparray.from(1, 2, 3, 4, 5, 6, 7, 8);
+
+    const test = (zipped, expected) => {
+      deq(zipped.map(a => a.toArray()).toArray(), expected);
+    }
+
+    it('should zip elements from different sparrays/arrays by index', () => {
+      test(sa.zip(), [[1], [2], [3]]);
+      test(sa.zip(sb), [[1, 'a'], [2, 'b'], [3, 'c']]);
+      test(sa.zip(sb, sc), [[1, 'a', true], [2, 'b', true], [3, 'c', false]]);
+      test(sa.zip(sd), [[1, 0], [2, undefined], [3, undefined]]);
+      test(sd.zip(se), [[0, 1], [undefined, 2], [undefined, 3], [undefined, 4], [undefined, 5], [undefined, 6], [undefined, 7], [undefined, 8]]);
+    });
+
+    it('should zip with a static element', () => {
+      test(sa.zip(6), [[1, 6], [2, 6], [3, 6]]);
+    });
+
+  });
+
 });

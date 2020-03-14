@@ -680,6 +680,25 @@ class Sparray {
     return this.map((value, index) => ({ index, value }));
   }
 
+  zip(...toZip) {
+    const size = toZip.filter(a => a.length).map(a => a.length).reduce((a, b) => Math.max(a, b), this.length);
+    const data = [];
+    for (let i = 0; i < size; i++) {
+      const element = [this.get(i)];
+      for (const a of toZip) {
+        if (isSparray(a)) {
+          element.push(a.get(i));
+        } else if (Array.isArray(a)) {
+          element.push(a[i]);
+        } else {
+          element.push(a)
+        }
+      }
+      data.push(from(element));
+    }
+    return from(data);
+  }
+
 }
 
 module.exports = {
