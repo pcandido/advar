@@ -757,4 +757,24 @@ describe('sparray', () => {
 
   });
 
+  describe('last(n)', () => {
+
+    const sp = sparray.from(1, 2, 3, 4, 5);
+
+    it('should return the last element if no param is provided', () => {
+      eq(sp.last(), 5);
+    });
+
+    it('should return the last n element if param is provided', () => {
+      deq(sp.last(1).toArray(), [5]);
+      deq(sp.last(3).toArray(), [3, 4, 5]);
+      deq(sp.last(20).toArray(), [1, 2, 3, 4, 5]);
+    });
+
+    it('should return undefined if sparray is empty', () => {
+      eq(sparray.from().last(), undefined);
+    })
+
+  });
+
 });

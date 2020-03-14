@@ -583,6 +583,18 @@ class Sparray {
     }
   }
 
+  /**
+  * Return the last element, and if the 'n' param is provided, return the last n elements as a new sparray
+  * @param n [optional] number of elements
+  */
+  last(n) {
+    if (typeof n === 'undefined') {
+      return this.get(this.length - 1);
+    } else {
+      return this.slice(-n);
+    }
+  }
+
 }
 
 module.exports = {
