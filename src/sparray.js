@@ -571,6 +571,18 @@ class Sparray {
     return from([...this._data]);
   }
 
+  /**
+   * Return the first element, and if the 'n' param is provided, return the first n elements as a new sparray
+   * @param n [optional] number of elements
+   */
+  first(n) {
+    if (typeof n === 'undefined') {
+      return this.get(0);
+    } else {
+      return this.slice(0, n);
+    }
+  }
+
 }
 
 module.exports = {

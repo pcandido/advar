@@ -737,4 +737,24 @@ describe('sparray', () => {
 
   });
 
+  describe('first(n)', () => {
+
+    const sp = sparray.from(1, 2, 3, 4, 5);
+
+    it('should return the first element if no param is provided', () => {
+      eq(sp.first(), 1);
+    });
+
+    it('should return the first n element if param is provided', () => {
+      deq(sp.first(1).toArray(), [1]);
+      deq(sp.first(3).toArray(), [1, 2, 3]);
+      deq(sp.first(20).toArray(), [1, 2, 3, 4, 5]);
+    });
+
+    it('should return undefined if sparray is empty', () => {
+      eq(sparray.from().first(), undefined);
+    })
+
+  });
+
 });
