@@ -822,4 +822,41 @@ describe('sparray', () => {
 
   });
 
+  describe('max()', () => {
+
+    it('should get the max value of sparray', () => {
+      eq(sparray.from().max(), undefined);
+      eq(sparray.from(1).max(), 1);
+      eq(sparray.from(1, 2, 3).max(), 3);
+      eq(sparray.from(3, 2, 0, 3).max(), 3);
+    });
+
+  });
+
+  describe('maxBy(valueFn)', () => {
+
+    it('should get the max value using the valueFn to get a comparable value', () => {
+      const sp = sparray.from(
+        { a: 3, b: 1, c: 'c' },
+        { a: 2, b: 2, c: 'a' },
+        { a: 1, b: 3, c: 'b' }
+      );
+
+      deq(sp.maxBy(a => a.a).toArray(), [{ a: 3, b: 1, c: 'c' }]);
+      deq(sp.maxBy(a => a.b).toArray(), [{ a: 1, b: 3, c: 'b' }]);
+      deq(sp.maxBy(a => a.c).toArray(), [{ a: 3, b: 1, c: 'c' }]);
+    })
+
+    it('should return a sparray if more than one element has the max value', () => {
+      const sp = sparray.from(
+        { a: 1, b: 1, c: 'c' },
+        { a: 2, b: 2, c: 'a' },
+        { a: 2, b: 3, c: 'c' }
+      );
+      deq(sp.maxBy(a => a.c).toArray(), [{ a: 1, b: 1, c: 'c' }, { a: 2, b: 3, c: 'c' }]);
+      deq(sp.maxBy(a => a.a).toArray(), [{ a: 2, b: 2, c: 'a' }, { a: 2, b: 3, c: 'c' }]);
+    })
+
+  });
+
 });

@@ -514,6 +514,28 @@ class Sparray {
   }
 
   /**
+   * Returns the max value of the sparray
+   */
+  max() {
+    if (this.isEmpty())
+      return undefined;
+    return this._data.reduce((a, b) => a > b ? a : b);
+  }
+
+  /**
+   * Returns a sparray with all the elements which has the maximum value returned by valueFn
+   */
+  maxBy(valueFn, thisArg) {
+    if (this.isEmpty())
+      return empty();
+
+    valueFn.bind(thisArg || this);
+
+    const maxValue = this.map(valueFn).max();
+    return this.filter(a => valueFn(a) === maxValue);
+  }
+
+  /**
    * Indexes the elements by a key. The result is an object where the keys are providen by keyFn and the values are the own elements. 
    * If there are duplicate keys, the last element that generated that key will be preserved. 
    * @see groupBy
