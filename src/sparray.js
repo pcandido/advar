@@ -93,6 +93,13 @@ const fromSet = (set) => {
 }
 
 /**
+ * Builds an empty sparray
+ */
+const empty = () => {
+  return new Sparray([])
+}
+
+/**
  * Determines if the obj is an instance of Sparray
  * @param obj obj to verify
  */
@@ -485,6 +492,28 @@ class Sparray {
   }
 
   /**
+   * Returns the min value of the sparray
+   */
+  min() {
+    if (this.isEmpty())
+      return undefined;
+    return this._data.reduce((a, b) => a < b ? a : b);
+  }
+
+  /**
+   * Returns a sparray with all the elements which has the minimum value returned by valueFn
+   */
+  minBy(valueFn, thisArg) {
+    if (this.isEmpty())
+      return empty();
+
+    valueFn.bind(thisArg || this);
+
+    const minValue = this.map(valueFn).min();
+    return this.filter(a => valueFn(a) === minValue);
+  }
+
+  /**
    * Indexes the elements by a key. The result is an object where the keys are providen by keyFn and the values are the own elements. 
    * If there are duplicate keys, the last element that generated that key will be preserved. 
    * @see groupBy
@@ -598,5 +627,5 @@ class Sparray {
 }
 
 module.exports = {
-  from, range, fillOf, fromSet, isSparray
+  from, range, fillOf, fromSet, isSparray, empty
 }

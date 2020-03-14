@@ -114,6 +114,14 @@ describe('sparray', () => {
 
   });
 
+  describe('empty', () => {
+
+    it('should build an empty sparray', () => {
+      deq(sparray.empty().toArray(), []);
+    });
+
+  });
+
   describe('isSparray()', () => {
 
     it('should return true for sparrays', () => {
@@ -773,6 +781,43 @@ describe('sparray', () => {
 
     it('should return undefined if sparray is empty', () => {
       eq(sparray.from().last(), undefined);
+    })
+
+  });
+
+  describe('min()', () => {
+
+    it('should get the min value of sparray', () => {
+      eq(sparray.from().min(), undefined);
+      eq(sparray.from(1).min(), 1);
+      eq(sparray.from(1, 2, 3).min(), 1);
+      eq(sparray.from(1, 2, 0, 3).min(), 0);
+    });
+
+  });
+
+  describe('minBy(valueFn)', () => {
+
+    it('should get the min value using the valueFn to get a comparable value', () => {
+      const sp = sparray.from(
+        { a: 3, b: 1, c: 'c' },
+        { a: 2, b: 2, c: 'a' },
+        { a: 1, b: 3, c: 'b' }
+      );
+
+      deq(sp.minBy(a => a.a).toArray(), [{ a: 1, b: 3, c: 'b' }]);
+      deq(sp.minBy(a => a.b).toArray(), [{ a: 3, b: 1, c: 'c' }]);
+      deq(sp.minBy(a => a.c).toArray(), [{ a: 2, b: 2, c: 'a' }]);
+    })
+
+    it('should return a sparray if more than one element has the min value', () => {
+      const sp = sparray.from(
+        { a: 1, b: 1, c: 'c' },
+        { a: 2, b: 2, c: 'a' },
+        { a: 1, b: 3, c: 'a' }
+      );
+      deq(sp.minBy(a => a.c).toArray(), [{ a: 2, b: 2, c: 'a' }, { a: 1, b: 3, c: 'a' }]);
+      deq(sp.minBy(a => a.a).toArray(), [{ a: 1, b: 1, c: 'c' }, { a: 1, b: 3, c: 'a' }]);
     })
 
   });
