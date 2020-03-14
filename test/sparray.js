@@ -570,6 +570,36 @@ describe('sparray', () => {
 
   })
 
+  describe('sortBy(keyFn, reverse, thisArg)', () => {
+
+    it('should build a new sparray with the elements sorted', () => {
+      deq(sparray.from().sortBy(a => a).toArray(), []);
+      deq(sparray.from(3, 2, 1).sortBy(a => a).toArray(), [1, 2, 3]);
+      deq(sparray.from(3, 1, 2).sortBy(a => a, true).toArray(), [3, 2, 1]);
+    });
+
+    const sp = sparray.from(
+      { id: 1, a: 2, b: 6, c: 'a' },
+      { id: 2, a: 4, b: 2, c: 'b' },
+      { id: 3, a: 1, b: 4, c: 'e' },
+      { id: 4, a: 3, b: 6, c: 'd' },
+      { id: 5, a: 4, b: 1, c: 'c' }
+    );
+
+    it('should sort complex objects by a property', () => {
+      deq(sp.sortBy(a => a.a).map(a => a.id).toArray(), [3, 1, 4, 2, 5]);
+      deq(sp.sortBy(a => a.b).map(a => a.id).toArray(), [5, 2, 3, 1, 4]);
+      deq(sp.sortBy(a => a.c).map(a => a.id).toArray(), [1, 2, 5, 4, 3]);
+    });
+
+    it('should sort by a set of criteria', () => {
+      deq(sp.sortBy(a => [a.a, a.b]).map(a => a.id).toArray(), [3, 1, 4, 5, 2]);
+      deq(sp.sortBy(a => [a.a, a.c]).map(a => a.id).toArray(), [3, 1, 4, 2, 5]);
+      deq(sp.sortBy(a => [a.b, a.c]).map(a => a.id).toArray(), [5, 2, 3, 1, 4]);
+    });
+
+  })
+
   describe('slice(start, end)', () => {
 
     it('should build a new sparray with the elements sliced', () => {

@@ -435,10 +435,37 @@ class Sparray {
   */
   sort(sortFn, thisArg) {
     if (typeof sortFn !== 'undefined') {
-      return from(this.toArray().sort(sortFn, thisArg));
+      return from(this.toArray().sort(sortFn, thisArg || this));
     } else {
       return from(this.toArray().sort())
     }
+  }
+
+  /**
+ * Builds a new sparray with the elements sorted by the criteria provided by keyFn
+ * @param keyFn get key from object
+ * @param thisArg object to be used as this inside sortFn
+ */
+  sortBy(keyFn, reverse, thisArg) {
+    keyFn.bind(thisArg || this);
+
+    return from(this._data.sort((a, b) => {
+      let keysA = keyFn(a);
+      let keysB = keyFn(b);
+
+      if (isSparray(keysA)) keysA = keysA.toArray();
+      if (isSparray(keysB)) keysB = keysB.toArray();
+
+      if (!Array.isArray(keysA)) keysA = [keysA];
+      if (!Array.isArray(keysB)) keysB = [keysB];
+
+      for (let i = 0; i < Math.min(keysA.length, keysB.length); i++) {
+        if (keysA[i] < keysB[i]) return reverse ? 1 : -1;
+        if (keysA[i] > keysB[i]) return reverse ? -1 : 1;
+      }
+
+      return 0;
+    }))
   }
 
   /**
