@@ -23,9 +23,7 @@
   },
   "homepage": "https://github.com/pcandido/sparray#readme",
   "devDependencies": {
-    "mocha": "^7.0.1"
-  },
-  "dependencies": {
+    "mocha": "^7.0.1",
     "sinon": "^9.0.1"
   }
 }
