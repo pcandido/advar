@@ -532,6 +532,20 @@ describe('sparray', () => {
 
   })
 
+  describe('includesAll(values)', () => {
+
+    it('should return true if the sparray contains the all the values', () => {
+      eqf(sparray.from().includesAll(1));
+      eqf(sparray.from().includesAll([1]));
+      eqt(sparray.from(1, 2, 3).includesAll(1));
+      eqt(sparray.from(1, 2, 3).includesAll([1, 2]));
+      eqt(sparray.from(1, 2, 3).includesAll(sparray.from(1, 2)));
+      eqf(sparray.from(1, 2, 3).includes([1, 5]));
+      eqf(sparray.from(1, 2, 3).includes([5]));
+    });
+
+  })
+
   describe('reverse()', () => {
 
     it('should build a new sparray with the elements in reverse order', () => {
@@ -922,6 +936,42 @@ describe('sparray', () => {
       test(sa.zip(6), [[1, 6], [2, 6], [3, 6]]);
     });
 
+  });
+
+  describe('sample(n,withReplacement)', () => {
+
+    const sa = sparray.from(1, 2, 3, 4, 5);
+
+    it('should sample a single element from sparray with n was not provided', () => {
+      const times = {};
+      for (let i = 0; i < 1000; i++) {
+        const samp = sa.sample();
+        times[samp] = (times[samp] || 0) + 1;
+      }
+
+      for (const a of sa.values()) {
+        assert(times[a] > 50);
+      }
+    });
+
+    it('should sample a set of elements if n is provided', () => {
+      assert(sa.includesAll(sa.sample(3)));
+    });
+
+    it('could repeat elements if withReplacement=true', () => {
+      const grouped = sa.sample(10, true).groupBy(a => a, a => a.count());
+      assert(sa.map(a => grouped[a]).max() > 1);
+    });
+
+    it('should not repeat elements if withReplacement=false', () => {
+      deq(sa.sample(sa.length, false).sort().toArray(), sa.toArray());
+    });
+
+    it('should throw an exception if n > sparray.length and withReplacement=false', () => {
+      assert.throws(() => {
+        sa.sample(6, false);
+      });
+    });
   });
 
 });

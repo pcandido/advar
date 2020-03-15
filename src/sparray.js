@@ -422,6 +422,21 @@ class Sparray {
   }
 
   /**
+   * Returns true if the sparray constains all the values, and false otherwise
+   * @param value values to search
+   */
+  includesAll(values) {
+    if (isSparray(values))
+      values = values.toArray();
+
+    if (!Array.isArray(values)) {
+      return this.includes(values)
+    }
+
+    return values.every(a => this._data.includes(a));
+  }
+
+  /**
    * Builds a new sparray with the reverse order
    */
   reverse() {
@@ -697,6 +712,33 @@ class Sparray {
       data.push(from(element));
     }
     return from(data);
+  }
+
+  /**
+   * Sample data from the sparray. If n is not provided, a single element will be returned, otherwise, a new sparray will be returned. 
+   * @param n 
+   * @param withReplacement 
+   */
+  sample(n, withReplacement) {
+    const random = (n) => Math.trunc(Math.random() * n);
+    if (typeof n === 'undefined') {
+      return this.get(random(this.length));
+    } else {
+      if (!withReplacement && n > this.length) {
+        throw 'n cannot be greater than the length of sparray, if withReplacement=false';
+      }
+
+      let selected = [];
+      let all = this.toArray();
+      for (let i = 0; i < n; i++) {
+        const j = random(all.length);
+        selected.push(all[j]);
+        if (!withReplacement) {
+          all.splice(j, 1);
+        }
+      }
+      return from(selected);
+    }
   }
 
 }
