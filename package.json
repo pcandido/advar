@@ -4,7 +4,7 @@
     "description": "Super Array",
     "main": "src/sparray.js",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && tsc -p tsconfig-browser.json",
         "test": "npm run build && mocha",
         "deploy": "npm run build && npm test && npm version patch && git push && git push --tag"
     },

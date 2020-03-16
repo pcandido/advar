@@ -88,7 +88,7 @@ export function fillOf<T>(n: number, value: T): Sparray<T> {
 /**
  * Builds an empty sparray
  */
-const empty = () => {
+export function empty(): Sparray<any> {
   return new Sparray([])
 }
 
@@ -96,7 +96,7 @@ const empty = () => {
  * Determines if the obj is an instance of Sparray
  * @param obj obj to verify
  */
-const isSparray = (obj: any) => {
+export function isSparray(obj: any): boolean {
   return obj instanceof Sparray;
 }
 
@@ -825,8 +825,4 @@ class Sparray<T>  {
     }
   }
 
-}
-
-module.exports = {
-  from, range, fillOf, isSparray, empty
 }
