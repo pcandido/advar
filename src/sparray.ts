@@ -1,6 +1,3 @@
-import util from 'util';
-
-
 /**
    * Builds a Sparray from several ways:
    * 1) with no param for an empty array
@@ -126,9 +123,13 @@ class Sparray<T>  {
   /**
    * An node debugger/inspect representation for the Sparray. It will be the same of the raw data (array-like representation).
    */
+  /*
+  //TODO: verify how to include this withou break browser version
+  import util from 'util';
   [util.inspect.custom](depth: any, opts: any): any {
     return this._data;
   }
+  */
 
   private _resolveIndex(index: number): number {
     if (index < 0)
@@ -194,7 +195,7 @@ class Sparray<T>  {
    * @param filterFn is an optional filter function to be applied during the count
    * @param thisArg object to be used as this inside filterFn
    */
-  count(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg: any): number {
+  count(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): number {
     if (!filterFn) return this.length;
 
     filterFn.bind(thisArg || this);
@@ -528,7 +529,6 @@ class Sparray<T>  {
     return from(this.toArray().reverse());
   }
 
-  //TODO: are all thisArg optional?
   /**
   * Builds a new sparray with the elements sorted by either a natural order or a custom sortFn
   * @param sortFn otional custom sort condition
