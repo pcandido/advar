@@ -1,29 +1,31 @@
 {
-  "name": "sparray",
-  "version": "0.1.21",
-  "description": "Super Array",
-  "main": "src/sparray.js",
-  "scripts": {
-    "test": "mocha",
-    "deploy": "npm test && npm version patch && git push && git push --tag"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pcandido/sparray.git"
-  },
-  "keywords": [
-    "list",
-    "array",
-    "collection"
-  ],
-  "author": "Paulo Cândido <pcandido.m@gmail.com>",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/pcandido/sparray/issues"
-  },
-  "homepage": "https://github.com/pcandido/sparray#readme",
-  "devDependencies": {
-    "mocha": "^7.0.1",
-    "sinon": "^9.0.1"
-  }
+    "name": "sparray",
+    "version": "0.1.21",
+    "description": "Super Array",
+    "main": "src/sparray.js",
+    "scripts": {
+        "build": "tsc",
+        "test": "npm run build && mocha",
+        "deploy": "npm run build && npm test && npm version patch && git push && git push --tag"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pcandido/sparray.git"
+    },
+    "keywords": [
+        "list",
+        "array",
+        "collection"
+    ],
+    "author": "Paulo Cândido <pcandido.m@gmail.com>",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/pcandido/sparray/issues"
+    },
+    "homepage": "https://github.com/pcandido/sparray#readme",
+    "devDependencies": {
+        "@types/node": "^13.9.1",
+        "mocha": "^7.0.1",
+        "typescript": "^3.8.3"
+    }
 }

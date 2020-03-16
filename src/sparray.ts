@@ -1,4 +1,4 @@
-const util = require('util');
+import util from 'util';
 
 
 /**
@@ -11,15 +11,17 @@ const util = require('util');
    *
    * @param data is the elements to build an Sparray
    */
-const from = (...data) => {
+export function from<T>(...data: any): Sparray<T> {
   if (data.length === 0) {
     return new Sparray([]);
   } else if (data.length === 1) {
     data = data[0];
     if (Array.isArray(data)) {
-      return new Sparray([...data]);
+      return new Sparray(data);
+    } else if (data instanceof Set) {
+      return new Sparray(Array.from(data));
     } else if (data instanceof Sparray) {
-      return new Sparray([...data._data]);
+      return new Sparray(data._data);
     } else {
       return new Sparray([data]);
     }
@@ -38,7 +40,7 @@ const from = (...data) => {
  * @param end of range (exclusive)
  * @param step the size of increment
  */
-const range = (start, end, step) => {
+export function range(start: number, end?: number, step?: number): Sparray<number> {
   if (typeof start === 'undefined') {
     throw new Error('No param was supplied');
   }
@@ -56,13 +58,13 @@ const range = (start, end, step) => {
     throw new Error(`Invalid step ${step}`);
   }
 
-  data = [];
+  const data = [];
   if (end < start) {
     for (let i = start; i > end; i += step) data.push(i);
   } else {
     for (let i = start; i < end; i += step) data.push(i);
   }
-  return new Sparray(data);
+  return new Sparray<number>(data);
 }
 
 /**
@@ -70,26 +72,17 @@ const range = (start, end, step) => {
  * @param n the desired length of the sparray
  * @param value the static value for all the elements
  */
-const fillOf = (n, value) => {
+export function fillOf<T>(n: number, value: T): Sparray<T> {
   if (typeof n !== 'number') {
     throw new Error('Invalid number (n) of elements');
   }
 
-  data = [];
+  const data = [];
   for (let i = 0; i < n; i++) {
     data.push(value);
   }
 
-  return new Sparray(data);
-}
-
-/**
- * Builds a sparray from a set
- * 
- * @param set source of data
- */
-const fromSet = (set) => {
-  return new Sparray(Array.from(set))
+  return new Sparray<T>(data);
 }
 
 /**
@@ -103,20 +96,20 @@ const empty = () => {
  * Determines if the obj is an instance of Sparray
  * @param obj obj to verify
  */
-const isSparray = (obj) => {
+const isSparray = (obj: any) => {
   return obj instanceof Sparray;
 }
 
-class Sparray {
+class Sparray<T>  {
 
-  _data;
+  _data: T[];
 
   /**
    * Constructor of the Sparray. Receive an array as data.
    *
    * @param data an array with the elements
    */
-  constructor(data) {
+  constructor(data: T[]) {
     if (!Array.isArray(data))
       throw new Error('Invalid data input');
 
@@ -126,18 +119,18 @@ class Sparray {
   /**
    * Returns the raw data as a native array
    */
-  toArray() {
+  toArray(): T[] {
     return [...this._data];
   }
 
   /**
    * An node debugger/inspect representation for the Sparray. It will be the same of the raw data (array-like representation).
    */
-  [util.inspect.custom](depth, opts) {
+  [util.inspect.custom](depth: any, opts: any): any {
     return this._data;
   }
 
-  _resolveIndex(index) {
+  private _resolveIndex(index: number): number {
     if (index < 0)
       return this.length + index;
     else
@@ -149,42 +142,49 @@ class Sparray {
    *
    * @param index is the position from where the element should be gotten
    */
-  get(index) {
+  get(index: number): T {
     return this._data[this._resolveIndex(index)];
   }
 
   /**
    * Returns a keys iteratior of the sparray.
    */
-  keys() {
+  keys(): IterableIterator<number> {
     return this._data.keys();
   }
 
   /**
    * Returns a values iteratior of the sparray.
    */
-  values() {
+  values(): IterableIterator<T> {
     return this._data.values();
+  }
+
+  /**
+   * Returns a values iteratior of the sparray.
+   */
+  [Symbol.iterator]() {
+    return this.values()
   }
 
   /**
    * Returns an entry iteratior of the sparray.
    */
-  entries() {
+  entries(): IterableIterator<[number, T]> {
     return this._data.entries();
   }
 
   /**
    * The number of elements of the sparray.
    */
-  get length() {
+  get length(): number {
     return this._data.length;
   }
 
   /*
    * Returns the number of elements of the sparray.
    */
-  size() {
+  size(): number {
     return this.length;
   }
 
@@ -194,7 +194,7 @@ class Sparray {
    * @param filterFn is an optional filter function to be applied during the count
    * @param thisArg object to be used as this inside filterFn
    */
-  count(filterFn, thisArg) {
+  count(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg: any): number {
     if (!filterFn) return this.length;
 
     filterFn.bind(thisArg || this);
@@ -213,8 +213,15 @@ class Sparray {
    * @param mapFn transformation function
    * @param thisArg object to be used as this inside mapFn
    */
-  map(mapFn, thisArg) {
-    return from(this._data.map(mapFn, thisArg || this));
+  map<U>(mapFn: (value: T, index: number, sparray: Sparray<T>) => U, thisArg?: any): Sparray<U> {
+    mapFn.bind(thisArg || this);
+
+    const mapped: U[] = [];
+    for (let i = 0; i < this.length; i++) {
+      mapped[i] = mapFn(this.get(i), i, this);
+    }
+
+    return from(mapped);
   }
 
   /**
@@ -224,11 +231,27 @@ class Sparray {
    * @param initialValue to initialize the accumulated value
    * @param thisArg object to be used as this inside reduceFn
    */
-  reduce(reduceFn, initialValue, thisArg) {
-    if (typeof initialValue !== 'undefined')
-      return this._data.reduce(reduceFn, initialValue, thisArg || this);
-    else
-      return this._data.reduce(reduceFn);
+  reduce<U>(reduceFn: (previousValue: U | T, currentValue: T, currentIndex: number, sparray: Sparray<T>) => U, initialValue?: U, thisArg?: any): U | T {
+    if (this.length === 0 && (typeof initialValue === 'undefined')) {
+      throw 'Reduce of empty sparray with no initial value';
+    }
+
+    reduceFn.bind(thisArg || this);
+
+    let i: number, prev: U | T;
+    if (typeof initialValue === 'undefined') {
+      i = 1;
+      prev = this.get(0);
+    } else {
+      i = 0;
+      prev = initialValue;
+    }
+
+    for (; i < this.length; i++) {
+      prev = reduceFn(prev, this.get(i), i, this);
+    }
+
+    return prev;
   }
 
   /**
@@ -238,11 +261,27 @@ class Sparray {
    * @param initialValue to initialize the accumulated value
    * @param thisArg object to be used as this inside reduceFn
    */
-  reduceRight(reduceFn, initialValue, thisArg) {
-    if (typeof initialValue !== 'undefined')
-      return this._data.reduceRight(reduceFn, initialValue, thisArg || this);
-    else
-      return this._data.reduceRight(reduceFn);
+  reduceRight<U>(reduceFn: (previousValue: U | T, currentValue: T, currentIndex: number, sparray: Sparray<T>) => U, initialValue?: U, thisArg?: any): U | T {
+    if (this.length === 0 && (typeof initialValue === 'undefined')) {
+      throw 'Reduce of empty sparray with no initial value';
+    }
+
+    reduceFn.bind(thisArg || this);
+
+    let i: number, prev: U | T;
+    if (typeof initialValue === 'undefined') {
+      i = this._resolveIndex(-2);
+      prev = this.get(-1);
+    } else {
+      i = this._resolveIndex(-1);
+      prev = initialValue;
+    }
+
+    for (; i >= 0; i--) {
+      prev = reduceFn(prev, this.get(i), i, this);
+    }
+
+    return prev;
   }
 
   /**
@@ -250,8 +289,17 @@ class Sparray {
    * @param filterFn 
    * @param thisArg 
    */
-  filter(filterFn, thisArg) {
-    return from(this._data.filter(filterFn, thisArg || this));
+  filter(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): Sparray<T> {
+    filterFn.bind(thisArg || this);
+
+    const filtered: T[] = [];
+    for (const [i, a] of this.entries()) {
+      if (filterFn(a, i, this)) {
+        filtered.push(a);
+      }
+    }
+
+    return from(filtered);
   }
 
   /**
@@ -259,8 +307,14 @@ class Sparray {
    * @param forEachFn function to be executed over each element
    * @param thisArg object to be used as this in forEachFn
    */
-  forEach(forEachFn, thisArg) {
-    return this._data.forEach(forEachFn, thisArg || this);
+  forEach(forEachFn: (value: T, index: number, sparray: Sparray<T>) => void, thisArg?: any): Sparray<T> {
+    forEachFn.bind(thisArg || this);
+
+    for (const [i, a] of this.entries()) {
+      forEachFn(a, i, this);
+    }
+
+    return this;
   }
 
   /**
@@ -268,16 +322,16 @@ class Sparray {
    * @param mapFn transformation function
    * @param thisArg object to be used as this inside mapFn
    */
-  flatMap(mapFn, thisArg) {
+  flatMap<U>(mapFn: (value: T, index: number, sparray: Sparray<T>) => U[] | Sparray<U>, thisArg?: any): Sparray<U> {
     mapFn.bind(thisArg || this);
 
-    let flatted = [];
-    for (const i in this._data) {
-      const mapped = mapFn(this._data[i], i, this);
+    const flatted: U[] = [];
+    for (const [i, a] of this.entries()) {
+      const mapped = mapFn(a, i, this);
       if (isSparray(mapped)) {
-        flatted = flatted.concat(mapped._data);
+        flatted.push(...((mapped as Sparray<U>)._data));
       } else {
-        flatted = flatted.concat(mapped);
+        flatted.push(...(mapped as U[]));
       }
     }
     return from(flatted);
@@ -287,7 +341,7 @@ class Sparray {
    * Builds a new sparray flatting the nested sparrays and arrays to the main sparray
    * @param depth how depth the flatten will be applied
    */
-  flatten(depth) {
+  flatten(depth: number): Sparray<any> {
     if (typeof depth === 'undefined') {
       depth = 1;
     }
@@ -296,8 +350,10 @@ class Sparray {
       return this;
     }
 
-    const res = from(this._data.reduce((a, b) => {
-      if (b instanceof Sparray) b = b.toArray();
+    const res = from(this._data.reduce((a: any[], b) => {
+      if (b instanceof Sparray) {
+        return a.concat(b.toArray())
+      }
       return a.concat(b)
     }, []));
 
@@ -307,8 +363,8 @@ class Sparray {
   /**
    * Remove all the duplicates and create a new sparray of distinct values
    */
-  distinct() {
-    return fromSet(new Set(this._data));
+  distinct(): Sparray<T> {
+    return from(new Set(this._data));
   }
 
   /**
@@ -319,7 +375,7 @@ class Sparray {
    * @param separator the string to be used to separate the elements
    * @param thisArg object to be used as this inside the function, if it is provided
    */
-  join(separator, thisArg) {
+  join(separator: (indexFromStart: number, indexFromEnd: number) => string | string, thisArg?: any): string {
     if (typeof separator === 'string') {
       return this._data.join(separator);
     } else if (typeof separator === 'function') {
@@ -345,8 +401,14 @@ class Sparray {
    * @param someFn condiction to be test, should return boolean
    * @param thisArg object to be used as this inside someFn
    */
-  some(someFn, thisArg) {
-    return this._data.some(someFn, thisArg || this);
+  some(someFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): boolean {
+    someFn.bind(thisArg || this);
+
+    for (const [i, a] of this.entries()) {
+      if (someFn(a, i, this)) return true;
+    }
+
+    return false;
   }
 
   /**
@@ -354,8 +416,14 @@ class Sparray {
     * @param everyFn condiction to be test, should return boolean
     * @param thisArg object to be used as this inside everyFn
     */
-  every(everyFn, thisArg) {
-    return this._data.every(everyFn, thisArg || this);
+  every(everyFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): boolean {
+    everyFn.bind(thisArg || this);
+
+    for (const [i, a] of this.entries()) {
+      if (!everyFn(a, i, this)) return false;
+    }
+
+    return true;
   }
 
   /**
@@ -363,13 +431,13 @@ class Sparray {
    * The result will be a new sparray.
    * @param toConcat sparrays, arrays or elements to concat
    */
-  concat(...toConcat) {
+  concat(...toConcat: any): Sparray<T> {
     let data = this.toArray();
     for (const obj of toConcat) {
       if (isSparray(obj)) {
-        data = data.concat(obj._data);
+        data.push(...obj._data);
       } else if (Array.isArray(obj)) {
-        data = data.concat(obj);
+        data.push(...obj);
       } else {
         data.push(obj);
       }
@@ -383,8 +451,17 @@ class Sparray {
    * @param findFn condiction to be test, should return boolean
    * @param thisArg object to be used as this inside everyFn
    */
-  find(findFn, thisArg) {
-    return this._data.find(findFn, thisArg || this);
+  find(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): T | undefined {
+    filterFn.bind(thisArg || this);
+
+    const filtered: T[] = [];
+    for (const [i, a] of this.entries()) {
+      if (filterFn(a, i, this)) {
+        return a;
+      }
+    }
+
+    return undefined;
   }
 
   /**
@@ -392,8 +469,16 @@ class Sparray {
    * @param findFn condiction to be test, should return boolean
    * @param thisArg object to be used as this inside everyFn
    */
-  findIndex(findFn, thisArg) {
-    return this._data.findIndex(findFn, thisArg || this);
+  findIndex(findFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): number {
+    findFn.bind(thisArg || this);
+
+    for (const [i, a] of this.entries()) {
+      if (findFn(a, i, this)) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
 
@@ -401,7 +486,7 @@ class Sparray {
    * Returns the first index of the element equals to the searchElement, or -1 if not found
    * @param searchElement value to search
    */
-  indexOf(searchElement) {
+  indexOf(searchElement: T): number {
     return this._data.indexOf(searchElement);
   }
 
@@ -409,7 +494,7 @@ class Sparray {
    * Returns the last index of the element equals to the searchElement, or -1 if not found
    * @param searchElement value to search
    */
-  lastIndexOf(searchElement) {
+  lastIndexOf(searchElement: T): number {
     return this._data.lastIndexOf(searchElement);
   }
 
@@ -417,7 +502,7 @@ class Sparray {
    * Returns true if the sparray constains the value, and false otherwise
    * @param value value to search
    */
-  includes(value) {
+  includes(value: T): boolean {
     return this._data.includes(value);
   }
 
@@ -425,12 +510,12 @@ class Sparray {
    * Returns true if the sparray constains all the values, and false otherwise
    * @param value values to search
    */
-  includesAll(values) {
+  includesAll(values: any): boolean {
     if (isSparray(values))
-      values = values.toArray();
+      values = (values as Sparray<T>).toArray();
 
     if (!Array.isArray(values)) {
-      return this.includes(values)
+      return this.includes(values as T)
     }
 
     return values.every(a => this._data.includes(a));
@@ -439,37 +524,39 @@ class Sparray {
   /**
    * Builds a new sparray with the reverse order
    */
-  reverse() {
+  reverse(): Sparray<T> {
     return from(this.toArray().reverse());
   }
 
+  //TODO: are all thisArg optional?
   /**
   * Builds a new sparray with the elements sorted by either a natural order or a custom sortFn
   * @param sortFn otional custom sort condition
   * @param thisArg object to be used as this inside sortFn
   */
-  sort(sortFn, thisArg) {
-    if (typeof sortFn !== 'undefined') {
-      return from(this.toArray().sort(sortFn, thisArg || this));
-    } else {
+  sort(sortFn: (a: T, b: T) => number, thisArg?: any): Sparray<T> {
+    if (typeof sortFn === 'undefined') {
       return from(this.toArray().sort())
+    } else {
+      sortFn.bind(thisArg || this);
+      return from(this.toArray().sort(sortFn));
     }
   }
 
   /**
- * Builds a new sparray with the elements sorted by the criteria provided by keyFn
- * @param keyFn get key from object
- * @param thisArg object to be used as this inside sortFn
- */
-  sortBy(keyFn, reverse, thisArg) {
+   * Builds a new sparray with the elements sorted by the criteria provided by keyFn
+   * @param keyFn get key from object
+   * @param thisArg object to be used as this inside sortFn
+   */
+  sortBy<U>(keyFn: (value: T) => any, reverse: boolean, thisArg?: any) {
     keyFn.bind(thisArg || this);
 
     return from(this._data.sort((a, b) => {
       let keysA = keyFn(a);
       let keysB = keyFn(b);
 
-      if (isSparray(keysA)) keysA = keysA.toArray();
-      if (isSparray(keysB)) keysB = keysB.toArray();
+      if (isSparray(keysA)) keysA = (keysA as Sparray<U>).toArray();
+      if (isSparray(keysB)) keysB = (keysB as Sparray<U>).toArray();
 
       if (!Array.isArray(keysA)) keysA = [keysA];
       if (!Array.isArray(keysB)) keysB = [keysB];
@@ -488,7 +575,7 @@ class Sparray {
    * @param startIndex 
    * @param endIndex 
    */
-  slice(startIndex, endIndex) {
+  slice(startIndex: number, endIndex?: number): Sparray<T> {
     if (typeof endIndex == 'undefined')
       return from(this._data.slice(this._resolveIndex(startIndex)))
     else
@@ -498,54 +585,53 @@ class Sparray {
   /**
    * Returns the string representation of the sparray and its elements
    */
-  toString() {
+  toString(): string {
     return this._data.toString();
-  }
-
-  /**
-   * Returns the string localized representation of the sparray and its elements
-   */
-  toLocaleString(locales, options) {
-    return this._data.toLocaleString(locales, options);
   }
 
   /**
    * Returns true if all the elements of the array is numeric
    */
-  isNumeric() {
-    return this.every(a => typeof a === 'number');
+  toNumeric(): Sparray<number> {
+    return this.map(a => {
+      if (typeof a === 'number')
+        return a
+      else
+        return NaN
+    });
   }
 
   /**
    * Sums all the elements of the sparray. If there is a non-numeric element, the return will be NaN
    */
-  sum() {
-    if (!this.isNumeric()) return NaN;
-    return this.reduce((a, b) => a + b, 0);
+  sum(): number {
+    return this.toNumeric().reduce((a, b) => a + b, 0);
   }
 
   /**
    * Calculates the average of all the elements of the sparray. If there is a non-numeric element, the return will be NaN
    */
-  avg() {
-    if (this.length === 0) return undefined;
-    if (!this.isNumeric()) return NaN;
+  avg(): number {
+    if (this.isEmpty())
+      return NaN;
+
     return this.sum() / this.length;
   }
 
   /**
    * Returns the min value of the sparray
    */
-  min() {
+  min(): T | undefined {
     if (this.isEmpty())
       return undefined;
+
     return this._data.reduce((a, b) => a < b ? a : b);
   }
 
   /**
    * Returns a sparray with all the elements which has the minimum value returned by valueFn
    */
-  minBy(valueFn, thisArg) {
+  minBy(valueFn: (value: T) => any, thisArg?: any): Sparray<T> {
     if (this.isEmpty())
       return empty();
 
@@ -558,16 +644,17 @@ class Sparray {
   /**
    * Returns the max value of the sparray
    */
-  max() {
+  max(): T | undefined {
     if (this.isEmpty())
       return undefined;
+
     return this._data.reduce((a, b) => a > b ? a : b);
   }
 
   /**
    * Returns a sparray with all the elements which has the maximum value returned by valueFn
    */
-  maxBy(valueFn, thisArg) {
+  maxBy(valueFn: (value: T) => any, thisArg?: any): Sparray<T> {
     if (this.isEmpty())
       return empty();
 
@@ -584,12 +671,13 @@ class Sparray {
    * @param keyFn function to provide a key by element
    * @param thisArg object to be used as this inside keyFn
    */
-  indexBy(keyFn, thisArg) {
+  indexBy(keyFn: (value: T) => string, thisArg?: any): { [key: string]: T; } {
     keyFn.bind(thisArg || this);
+
     return this._data.reduce((a, b) => {
       a[keyFn(b)] = b;
       return a;
-    }, {});
+    }, {} as { [key: string]: T; });
   }
 
   /**
@@ -600,7 +688,7 @@ class Sparray {
    * @param valuesFn handle the sparray of the grouped elements
    * @param thisArg object to be used as this inside keyFn
    */
-  groupBy(keyFn, valuesFn, thisArg) {
+  groupBy(keyFn: (value: T) => string, valuesFn: (values: Sparray<T>) => any, thisArg?: any): any {
     if (typeof valuesFn === 'undefined')
       valuesFn = a => a;
 
@@ -611,7 +699,7 @@ class Sparray {
       const key = keyFn(b);
       (a[key] = a[key] || []).push(b);
       return a;
-    }, {});
+    }, {} as any);
 
     for (const p of Object.keys(grouped)) {
       grouped[p] = valuesFn(from(grouped[p]));
@@ -623,7 +711,7 @@ class Sparray {
   /**
    * Returns true if the sparray is empty and false otherwise
    */
-  isEmpty() {
+  isEmpty(): boolean {
     return this._data.length === 0;
   }
 
@@ -631,7 +719,7 @@ class Sparray {
   /**
    * Returns false if the sparray is empty and true otherwise
    */
-  isNotEmpty() {
+  isNotEmpty(): boolean {
     return this._data.length > 0;
   }
 
@@ -640,7 +728,7 @@ class Sparray {
    * @param size the size of partition
    * @param step how many steps to the next partition, by default is the same of size
    */
-  sliding(size, step) {
+  sliding(size: number, step?: number): Sparray<Sparray<T>> {
     if (size < 1) throw new Error('Size must be a positive integer');
 
     if (typeof step === 'undefined') {
@@ -658,17 +746,10 @@ class Sparray {
   }
 
   /**
-   * Builds a new sparray with the same elements
-   */
-  clone() {
-    return from([...this._data]);
-  }
-
-  /**
    * Return the first element, and if the 'n' param is provided, return the first n elements as a new sparray
    * @param n [optional] number of elements
    */
-  first(n) {
+  first(n?: number): T | Sparray<T> {
     if (typeof n === 'undefined') {
       return this.get(0);
     } else {
@@ -680,7 +761,7 @@ class Sparray {
   * Return the last element, and if the 'n' param is provided, return the last n elements as a new sparray
   * @param n [optional] number of elements
   */
-  last(n) {
+  last(n?: number): T | Sparray<T> {
     if (typeof n === 'undefined') {
       return this.get(this.length - 1);
     } else {
@@ -695,8 +776,9 @@ class Sparray {
     return this.map((value, index) => ({ index, value }));
   }
 
-  zip(...toZip) {
+  zip(...toZip: any[]): Sparray<Sparray<any>> {
     const size = toZip.filter(a => a.length).map(a => a.length).reduce((a, b) => Math.max(a, b), this.length);
+
     const data = [];
     for (let i = 0; i < size; i++) {
       const element = [this.get(i)];
@@ -719,8 +801,10 @@ class Sparray {
    * @param n 
    * @param withReplacement 
    */
-  sample(n, withReplacement) {
-    const random = (n) => Math.trunc(Math.random() * n);
+  sample(n?: number, withReplacement?: boolean): T | Sparray<T> {
+
+    const random = (n: number) => Math.trunc(Math.random() * n);
+
     if (typeof n === 'undefined') {
       return this.get(random(this.length));
     } else {
@@ -744,5 +828,5 @@ class Sparray {
 }
 
 module.exports = {
-  from, range, fillOf, fromSet, isSparray, empty
+  from, range, fillOf, isSparray, empty
 }
