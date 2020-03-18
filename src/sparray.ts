@@ -329,10 +329,12 @@ class Sparray<T>  {
     const flatted: U[] = [];
     for (const [i, a] of this.entries()) {
       const mapped = mapFn(a, i, this);
-      if (isSparray(mapped)) {
-        flatted.push(...((mapped as Sparray<U>)._data));
-      } else {
-        flatted.push(...(mapped as U[]));
+      if (mapped != null) {
+        if (isSparray(mapped)) {
+          flatted.push(...((mapped as Sparray<U>)._data));
+        } else {
+          flatted.push(...(mapped as U[]));
+        }
       }
     }
     return from(flatted);
