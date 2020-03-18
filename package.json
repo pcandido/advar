@@ -30,7 +30,6 @@
     },
     "files": [
         "dist",
-        "dist-browser",
-        "src"
+        "dist-browser"
     ]
 }
