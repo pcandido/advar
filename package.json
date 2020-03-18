@@ -2,7 +2,8 @@
     "name": "sparray",
     "version": "1.0.5",
     "description": "Super Array",
-    "main": "src/sparray.js",
+    "main": "dist/sparray.js",
+    "types": "dist/sparray.d.ts",
     "scripts": {
         "build": "tsc && tsc -p tsconfig-browser.json",
         "test": "npm run build && mocha",
