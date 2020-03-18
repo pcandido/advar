@@ -1,6 +1,6 @@
 {
     "name": "sparray",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "Super Array",
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
