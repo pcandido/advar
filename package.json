@@ -27,5 +27,9 @@
         "@types/node": "^13.9.1",
         "mocha": "^7.0.1",
         "typescript": "^3.8.3"
-    }
+    },
+    "files": [
+        "dist",
+        "dist-browser"
+    ]
 }
