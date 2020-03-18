@@ -1,1 +1,68 @@
-hello world
+<html>
+
+<head>
+    <title>Sparray</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="./index.css" />
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="./index.js" type="module"></script>
+</head>
+
+<body>
+    <h1 id="title">SparraY</h1>
+    <p id="desc"> Sparray (from supper array) is a dependency-free and immutable extension of the native array with
+        advanced methods such as groupBy, sortBy, and sliding. </p>
+
+    <div>
+        <section id="main" class="block">
+            <div class="block-title">Factories</div>
+            <div class="block-info"></div>
+            <div class="block-body">
+                <pre><code>const sparray = require('sparray');
+const data = sparray.from(<input id="sp" value="1, 2, 3">);</code></pre>
+            </div>
+            <div class="block-error"></div>
+            <div class="block-result"></div>
+        </section>
+
+        <section class="block auto">
+            <div class="block-title">.length</div>
+            <div class="block-info">Determines how many elements there are in the sparray</div>
+            <div class="block-body">
+                <pre><code>data.length</code></pre>
+            </div>
+            <div class="block-error"></div>
+            <div class="block-result"></div>
+        </section>
+
+        <section class="block auto">
+            <div class="block-title">.size()</div>
+            <div class="block-info">Determines how many elements there are in the sparray</div>
+            <div class="block-body">
+                <pre><code>data.size()</code></pre>
+            </div>
+            <div class="block-error"></div>
+            <div class="block-result"></div>
+        </section>
+
+        <section class="block auto">
+            <div class="block-title">.map(mapFn, thisArg)</div>
+            <div class="block-info">Transform</div>
+            <div class="block-body">
+                <pre><code>data.map(element => <input value="element">)</code></pre>
+            </div>
+            <div class="block-error"></div>
+            <div class="block-result"></div>
+        </section>
+    </div>
+</body>
+
+
+
+</html>

@@ -1,0 +1,71 @@
+body {
+    background: url('./background.png');
+    min-width: 800px;
+    width: 90%;
+    margin: 50px auto;
+    font-size: 20px;
+}
+
+@font-face {
+    font-family: picesOfEight;
+    src: url('./PiecesOfEight.ttf');
+}
+
+#title {
+    font-family: picesOfEight;
+    text-align: center;
+    font-size: 80px;
+}
+
+#desc {
+    text-align: center;
+}
+
+code {
+    padding: 20px !important;
+}
+
+code input {
+    border: none;
+    font-size: 20px;
+    font-family: monospace;
+    color: #282c34;
+    background: #abb2bf;
+    padding: 0 5px;
+}
+
+pre{
+    margin: 0;
+}
+
+block-title
+
+.block-error:before{
+    content: 'Error:';
+    display: block;
+    font-size: 0.8em;
+    color: rgba(255,0,0,0.5);
+    margin: -10px 0px 10px 0px;
+}
+
+.block-error{
+    display: none;
+    background: rgb(238, 215, 215);
+    color: red;
+    padding: 20px;
+    font-family: monospace;
+}
+
+.block-result:before{
+    content: 'Result:';
+    display: block;
+    font-size: 0.8em;
+    color: rgba(0,0,0,0.5);
+    margin: -10px 0px 10px 0px;
+}
+
+.block-result{
+    padding: 20px;
+    background-color: #aaaaaa;
+    font-family: monospace;
+}
