@@ -1,6 +1,6 @@
 {
     "name": "sparray",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Super Array",
     "main": "src/sparray.js",
     "scripts": {
