@@ -25,7 +25,7 @@ code {
     padding: 20px !important;
 }
 
-code input {
+code input, code textarea {
     border: none;
     font-size: 20px;
     font-family: monospace;
@@ -34,11 +34,39 @@ code input {
     padding: 0 5px;
 }
 
+code textarea {
+    height: 140px;
+    width: 500px;
+}
+
+input.small{
+    width: 50px;
+}
+
+input.big{
+    width: 400px;
+}
+
 pre{
     margin: 0;
 }
 
-block-title
+.block{
+    margin: 50px 0;
+}
+
+.block-title{
+    padding: 20px;
+    background-color: #aaaaaa;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.block-info{
+    padding: 20px;
+    background-color: #aaaaaa;
+    font-family: monospace;
+}
 
 .block-error:before{
     content: 'Error:';
@@ -68,4 +96,16 @@ block-title
     padding: 20px;
     background-color: #aaaaaa;
     font-family: monospace;
+}
+
+#factory-selector{
+    margin-bottom: 30px;
+}
+
+#factory-selector label{
+    display: block;
+}
+
+.not-valid{
+    color: rgba(0,0,0,0.5);
 }
