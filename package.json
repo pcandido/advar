@@ -5,7 +5,7 @@
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
     "scripts": {
-        "build": "tsc && tsc -p tsconfig-browser.json",
+        "build": "tsc && tsc -p tsconfig-browser.json && cp -r dist-browser/* docs",
         "test": "npm run build && mocha",
         "deploy": "npm run build && npm test && npm version patch && git push && git push --tag"
     },
