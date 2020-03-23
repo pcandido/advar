@@ -1,4 +1,4 @@
-import { from, range, fillOf, empty } from '../dist-browser/sparray.js';
+import { from, range, fillOf, empty } from './sparray.js';
 
 function calc() {
     let data;
