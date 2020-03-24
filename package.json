@@ -5,16 +5,16 @@
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
     "scripts": {
-        "clean": "rm -rf dist dist-browser docs",
+        "clean": "rm -rf dist dist-browser",
         "build": "tsc && tsc -p tsconfig-browser.json",
         "watch": "tsc -w && tsc -w -p tsconfig-browser.json",
         "lint": "tslint -p tsconfig.json",
         "cover": "nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout 15000 --exit test/*js",
         "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
         "test": "mocha --timeout 15000 --bail --exit test/*.js",
-        "docs": "typedoc --out docs",
+        "docs": "typedoc --out docs && touch docs/.nojekyll",
         "deploy-docs": "(git-is-clean || (echo \"Git working directory not clean.\" && exit 1)) && npm run docs && (git-is-clean || (git add docs/. && git commit -m \"refreshing docs\"))",
-        "deploy": "npm run build && npm test && npm run deploy-docs && npm version patch && git push && git push --tag"
+        "deploy": "npm run build && npm test && npm run lint && npm run deploy-docs && npm version patch && git push && git push --tag"
     },
     "repository": {
         "type": "git",
