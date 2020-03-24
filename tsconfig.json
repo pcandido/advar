@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "downlevelIteration": true,
-    "strict": true,
-    "esModuleInterop": true
-  }
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "declaration": true,
+        "downlevelIteration": true,
+        "strict": true,
+        "esModuleInterop": true
+    }
 }
