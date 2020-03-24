@@ -5,8 +5,16 @@
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
     "scripts": {
+        "clean": "rm -rf dist dist-browser",
+        "prepare": "npm run build",
         "build": "tsc && tsc -p tsconfig-browser.json && cp -r dist-browser/* docs",
-        "test": "npm run build && mocha",
+        "watch": "tsc -w && tsc -w -p tsconfig-browser.json && cp -r dist-browser/* docs",
+        "lint": "tslint -p tsconfig.json",
+        "doc": "jsdoc2md dist/sparray.js",
+        "cover": "nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout 15000 --exit test/*js",
+        "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
+        "docs": "typedoc --out docs --includeVersion",
+        "test": "mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js",
         "deploy": "npm run build && npm test && npm version patch && git push && git push --tag"
     },
     "repository": {
