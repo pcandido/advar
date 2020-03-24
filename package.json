@@ -5,10 +5,10 @@
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
     "scripts": {
-        "clean": "rm -rf dist dist-browser",
         "prepare": "npm run build",
-        "build": "tsc && tsc -p tsconfig-browser.json && cp -r dist-browser/* docs",
-        "watch": "tsc -w && tsc -w -p tsconfig-browser.json && cp -r dist-browser/* docs",
+        "clean": "rm -rf dist dist-browser docs",
+        "build": "tsc && tsc -p tsconfig-browser.json",
+        "watch": "tsc -w && tsc -w -p tsconfig-browser.json",
         "lint": "tslint -p tsconfig.json",
         "doc": "jsdoc2md dist/sparray.js",
         "cover": "nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout 15000 --exit test/*js",
@@ -35,6 +35,8 @@
     "devDependencies": {
         "@types/node": "^13.9.1",
         "mocha": "^7.0.1",
+        "tslint": "^6.1.0",
+        "typedoc": "^0.17.3",
         "typescript": "^3.8.3"
     },
     "files": [
