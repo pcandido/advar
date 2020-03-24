@@ -5,7 +5,6 @@
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
     "scripts": {
-        "prepare": "npm run build && npm run docs",
         "clean": "rm -rf dist dist-browser docs",
         "build": "tsc && tsc -p tsconfig-browser.json",
         "watch": "tsc -w && tsc -w -p tsconfig-browser.json",
