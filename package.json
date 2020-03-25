@@ -1,7 +1,7 @@
 {
     "name": "sparray",
     "version": "1.0.12",
-    "description": "Super Array",
+    "description": "Super Array - A simple and powerful library to handle immutable arrays/lists",
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
     "scripts": {

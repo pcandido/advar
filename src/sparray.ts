@@ -3,10 +3,10 @@
  * 1) with no param for an empty array
  * 2) with a single non-array-like element for an array of one element
  * 3) with a single array-like element for a copy of this array
- * 4) with a single Sparray object for a copy of this Sparray
+ * 4) with a single sparray object for a copy of this sparray
  * 5) with multiple params for a multi-element array
  *
- * @param data is the elements to build a sparray
+ * @param data - elements to build a sparray
  */
 export function from<T>(...data: any): Sparray<T> {
   if (data.length === 0) {
@@ -28,14 +28,14 @@ export function from<T>(...data: any): Sparray<T> {
 }
 
 /**
- * Builds a Sparray from a range. It can be used in several ways:
+ * Builds a sparray from a range. It can be used in several ways:
  * 1) with one param, the range iterates 1-by-1 from 0 (inclusive) to the value of param (exclusive)
  * 2) with two params, the range iterates 1-by-1 from the first param (inclusive) to the second param (exclusive)
  * 3) with three params, the range iterates by the value of the third param, from the value of the first param (inclusive) to the value of the second param (exclusive)
  *
- * @param start of range (inclusive)
- * @param end of range (exclusive)
- * @param step the size of increment
+ * @param start - start of the range (inclusive)
+ * @param end - end of the range (exclusive)
+ * @param step - the increment size
  */
 export function range(start: number, end?: number, step?: number): Sparray<number> {
   if (typeof start === 'undefined') {
@@ -65,9 +65,9 @@ export function range(start: number, end?: number, step?: number): Sparray<numbe
 }
 
 /**
- * Builds a sparray of n static value elements.
- * @param n the desired length of the sparray
- * @param value the static value for all the elements
+ * Builds a sparray of a number (n) of static valued elements.
+ * @param n - the desired length of the sparray
+ * @param value - the static value for all the elements
  */
 export function fillOf<T>(n: number, value: T): Sparray<T> {
   if (typeof n !== 'number') {
@@ -90,21 +90,29 @@ export function empty(): Sparray<any> {
 }
 
 /**
- * Determines if the obj is an instance of Sparray
- * @param obj obj to verify
+ * Determines if an object is an instance of sparray
+ * @param obj - object to verify
  */
 export function isSparray(obj: any): boolean {
   return obj instanceof Sparray
 }
 
+/**
+ * Sparray - Supper Array
+ * Holds the methods and attributes of a sparray. Sparrays are immutable, i.e. it is not possible to include,
+ * remove or replace an element of a sparray (although it is possible to change the referenced element,
+ * e.g: attributes of an object). Every operation/transformation (such as map, filter, and concat)
+ * will generate a new and immutable sparray.
+ */
 class Sparray<T>  {
 
   _data: T[]
 
   /**
-   * Constructor of the Sparray. Receive an array as data.
+   * Constructor of the sparray. Receive an array as data.
    *
-   * @param data an array with the elements
+   * @constructor
+   * @param data - array with the elements
    */
   constructor(data: T[]) {
     if (!Array.isArray(data))
@@ -121,7 +129,7 @@ class Sparray<T>  {
   }
 
   /**
-   * An node debugger/inspect representation for the Sparray. It will be the same of the raw data (array-like representation).
+   * An node debugger/inspect representation for the sparray. It will be the same as the raw data (array-like representation).
    */
   /*
   //TODO: verify how to include this withou break browser version
@@ -141,7 +149,7 @@ class Sparray<T>  {
   /**
    * Gets an element from sparray by index. Negative indices will get elements backward. Out of bound indices will return undefined.
    *
-   * @param index is the position from where the element should be gotten
+   * @param index - the position of the element that should be gotten
    */
   get(index: number): T {
     return this._data[this._resolveIndex(index)]
@@ -163,19 +171,19 @@ class Sparray<T>  {
   }
 
   /**
-   * Counts the number of elements. If a filterFn is provided, only the filtered elements will be counted.
+   * Counts the number of elements. If a conditionFn is provided, only the elements that match the condition will be counted.
    *
-   * @param filterFn is an optional filter function to be applied during the count
-   * @param thisArg object to be used as this inside filterFn
+   * @param conditionFn - an optional condition function
+   * @param thisArg - object to be used as this inside conditionFn
    */
-  count(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): number {
-    if (!filterFn) return this.length
+  count(conditionFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): number {
+    if (!conditionFn) return this.length
 
-    filterFn.bind(thisArg || this)
+    conditionFn.bind(thisArg || this)
 
     let c = 0
     for (let i = 0; i < this.length; i++) {
-      if (filterFn(this.get(i), i, this))
+      if (conditionFn(this.get(i), i, this))
         c++
     }
 
@@ -197,7 +205,7 @@ class Sparray<T>  {
   }
 
   /**
-   * Returns a values iteratior of the sparray.
+   * Returns a values iterator of the sparray.
    */
   [Symbol.iterator]() {
     return this.values()
@@ -212,9 +220,9 @@ class Sparray<T>  {
 
 
   /**
-   * Build a new sparray by transforming the elements according to the mapFn function.
-   * @param mapFn transformation function
-   * @param thisArg object to be used as this inside mapFn
+   * Build a new sparray by transforming the elements according to the mapFn function. For each element in sparray, mapFn must return a new element (derived or not from the original one).
+   * @param mapFn - transformation function
+   * @param thisArg - object to be used as this inside mapFn
    */
   map<U>(mapFn: (value: T, index: number, sparray: Sparray<T>) => U, thisArg?: any): Sparray<U> {
     mapFn.bind(thisArg || this)
@@ -229,10 +237,10 @@ class Sparray<T>  {
 
   /**
    * Aggregate the elements of sparray pair-by-pair, according to the reduceFn,
-   * accumulating the aggregation until last element.
-   * @param reduceFn aggragation (reducer) function
-   * @param initialValue to initialize the accumulated value
-   * @param thisArg object to be used as this inside reduceFn
+   * accumulating the aggregation until the last element.
+   * @param reduceFn - aggragation (reducer) function
+   * @param initialValue - value to initialize the accumulated variable
+   * @param thisArg - object to be used as this inside reduceFn
    */
   reduce<U>(reduceFn: (previousValue: U | T, currentValue: T, currentIndex: number, sparray: Sparray<T>) => U, initialValue?: U, thisArg?: any): U | T {
     if (this.length === 0 && (typeof initialValue === 'undefined')) {
@@ -261,9 +269,9 @@ class Sparray<T>  {
   /**
    * Aggregate the elements of sparray pair-by-pair, from the right to the left, according to the reduceFn,
    * accumulating the aggregation until the last element.
-   * @param reduceFn aggragation (reducer) function
-   * @param initialValue to initialize the accumulated value
-   * @param thisArg object to be used as this inside reduceFn
+   * @param reduceFn - aggragation (reducer) function
+   * @param initialValue - value to initialize the accumulated variable
+   * @param thisArg - object to be used as this inside reduceFn
    */
   reduceRight<U>(reduceFn: (previousValue: U | T, currentValue: T, currentIndex: number, sparray: Sparray<T>) => U, initialValue?: U, thisArg?: any): U | T {
     if (this.length === 0 && (typeof initialValue === 'undefined')) {
@@ -291,8 +299,8 @@ class Sparray<T>  {
 
   /**
    * Builds a new sparray with only the elements selected by filterFn.
-   * @param filterFn
-   * @param thisArg
+   * @param filterFn - filter function
+   * @param thisArg - object to be used as this inside reduceFn
    */
   filter(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): Sparray<T> {
     filterFn.bind(thisArg || this)
@@ -308,9 +316,9 @@ class Sparray<T>  {
   }
 
   /**
-   * Iterates over each element of the sparray. The sparray is returned, thus other methods may be chained.
-   * @param forEachFn function to be executed over each element
-   * @param thisArg object to be used as this in forEachFn
+   * Iterates over each element of the sparray. The own sparray is returned at the end, thus other methods may be chained.
+   * @param forEachFn - function to be executed over each element
+   * @param thisArg - object to be used as this in forEachFn
    */
   forEach(forEachFn: (value: T, index: number, sparray: Sparray<T>) => void, thisArg?: any): Sparray<T> {
     forEachFn.bind(thisArg || this)
@@ -323,9 +331,9 @@ class Sparray<T>  {
   }
 
   /**
-   * Build a new sparray by transforming the elements according to the flatMapFn function and flatten the result sparrays or arrays.
-   * @param flatMapFn transformation function
-   * @param thisArg object to be used as this inside flatMapFn
+   * Build a new sparray by transforming the elements according to the flatMapFn function and flatten the resultant sparrays or arrays.
+   * @param flatMapFn - transformation function
+   * @param thisArg - object to be used as this inside flatMapFn
    */
   flatMap<U>(flatMapFn: (value: T, index: number, sparray: Sparray<T>) => U[] | Sparray<U>, thisArg?: any): Sparray<U> {
     flatMapFn.bind(thisArg || this)
@@ -345,8 +353,8 @@ class Sparray<T>  {
   }
 
   /**
-   * Builds a new sparray flatting the nested sparrays and arrays to the main sparray
-   * @param depth how depth the flatten will be applied
+   * Builds a new sparray flatting the nested sparrays and/or arrays to the main sparray
+   * @param depth - how deep the flatten will be applied
    */
   flatten(depth: number): Sparray<any> {
     if (typeof depth === 'undefined') {
@@ -368,7 +376,7 @@ class Sparray<T>  {
   }
 
   /**
-   * Remove all the duplicates and create a new sparray of distinct values
+   * Builds a new sparray of distinct values, removing all the duplicates
    */
   distinct(): Sparray<T> {
     return from(new Set(this._data))
@@ -376,15 +384,16 @@ class Sparray<T>  {
 
   /**
    * Join the elements of the sparray in a string using the separator.
-   * The comma is the default separator. The separator can be a string or
-   * a function that returns a string. The function will receive as parameter
-   * the index of the separator from beggining and the index from end.
-   * Note the count of separators is the count of elements minus one.
+   * The comma is the default separator. The separator can be a string
+   * or a function that returns a string. The function will receive as
+   * parameter the index of the separator from the beginning and the
+   * index from the end. Note the count of separators is the count of
+   * elements minus one.
    *
-   * @param separator the string to be used to separate the elements
-   * @param thisArg object to be used as this inside the function, if it is provided
+   * @param separator - the string or function that resolves the separator
+   * @param thisArg - object to be used as this inside the function
    */
-  join(separator: (indexFromStart: number, indexFromEnd: number) => string | string, thisArg?: any): string {
+  join(separator: string | ((indexFromStart: number, indexFromEnd: number) => string), thisArg?: any): string {
     if (typeof separator === 'string') {
       return this._data.join(separator)
     } else if (typeof separator === 'function') {
@@ -407,8 +416,8 @@ class Sparray<T>  {
 
   /**
    * Returns true if some element produces the result true in the someFn.
-   * @param someFn condiction to be test, should return boolean
-   * @param thisArg object to be used as this inside someFn
+   * @param someFn - condiction to be tested
+   * @param thisArg - object to be used as this inside someFn
    */
   some(someFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): boolean {
     someFn.bind(thisArg || this)
@@ -422,8 +431,8 @@ class Sparray<T>  {
 
   /**
    * Returns true if every element produces the result true in the everyFn.
-   * @param everyFn condiction to be test, should return boolean
-   * @param thisArg object to be used as this inside everyFn
+   * @param everyFn - condiction to be tested
+   * @param thisArg - object to be used as this inside everyFn
    */
   every(everyFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): boolean {
     everyFn.bind(thisArg || this)
@@ -439,7 +448,7 @@ class Sparray<T>  {
    * Concatenates one or more sparrays, arrays or elements to the original sparray.
    * The result will be a new sparray. The original sparray is not changed.
    *
-   * @param toConcat sparrays, arrays or elements to concat
+   * @param toConcat - sparrays, arrays or elements to concatenate
    */
   concat(...toConcat: any): Sparray<T> {
     const data = this.toArray()
@@ -458,8 +467,8 @@ class Sparray<T>  {
 
   /**
    * Returns the first element that satisfies the condition of findFn, or undefined if no element satisfies.
-   * @param findFn condiction to be test, should return boolean
-   * @param thisArg object to be used as this inside everyFn
+   * @param findFn - condiction to be tested
+   * @param thisArg - object to be used as this inside everyFn
    */
   find(filterFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): T | undefined {
     filterFn.bind(thisArg || this)
@@ -476,8 +485,8 @@ class Sparray<T>  {
 
   /**
    * Returns the index of the first element that satisfies the condition of findFn, or -1 if no element satisfies.
-   * @param findFn condiction to be test, should return boolean
-   * @param thisArg object to be used as this inside everyFn
+   * @param findFn - condiction to be tested
+   * @param thisArg - object to be used as this inside everyFn
    */
   findIndex(findFn: (value: T, index: number, sparray: Sparray<T>) => boolean, thisArg?: any): number {
     findFn.bind(thisArg || this)
@@ -509,7 +518,7 @@ class Sparray<T>  {
   }
 
   /**
-   * Returns true if the sparray constains the value, and false otherwise
+   * Returns true if the sparray contains the value, and false otherwise
    * @param value value to search
    */
   includes(value: T): boolean {
@@ -517,7 +526,7 @@ class Sparray<T>  {
   }
 
   /**
-   * Returns true if the sparray constains all the values, and false otherwise
+   * Returns true if the sparray contains all the values, and false otherwise
    * @param value values to search
    */
   includesAll(values: any): boolean {
@@ -540,10 +549,10 @@ class Sparray<T>  {
 
   /**
    * Builds a new sparray with the elements sorted by either a natural order or a custom sortFn
-   * @param sortFn otional custom sort condition
-   * @param thisArg object to be used as this inside sortFn
+   * @param sortFn - otional custom sort condition
+   * @param thisArg - object to be used as this inside sortFn
    */
-  sort(sortFn: (a: T, b: T) => number, thisArg?: any): Sparray<T> {
+  sort(sortFn?: (a: T, b: T) => number, thisArg?: any): Sparray<T> {
     if (typeof sortFn === 'undefined') {
       return from(this.toArray().sort())
     } else {
@@ -554,7 +563,7 @@ class Sparray<T>  {
 
   /**
    * Builds a new sparray with the elements sorted by the criteria provided by keyFn
-   * @param keyFn get key from object
+   * @param keyFn - get sort key from object
    * @param thisArg object to be used as this inside sortFn
    */
   sortBy<U>(keyFn: (value: T) => any, reverse: boolean, thisArg?: any) {
@@ -580,9 +589,9 @@ class Sparray<T>  {
   }
 
   /**
-   * Builds a new sparray with the elements sliced from the original one. Negative indices could be used to backward indexing. The end index is optional.
-   * @param startIndex
-   * @param endIndex
+   * Builds a new sparray with the elements sliced from the original one. Negative indices could be used to backward indexing.
+   * @param startIndex - slice from this index (inclusive).
+   * @param endIndex - slice until this index (exclusive). If it is not provided, it assumes the end of the sparray.
    */
   slice(startIndex: number, endIndex?: number): Sparray<T> {
     if (typeof endIndex === 'undefined')
@@ -595,11 +604,11 @@ class Sparray<T>  {
    * Returns the string representation of the sparray and its elements
    */
   toString(): string {
-    return this._data.toString()
+    return `[ ${this.join(', ')} ]`
   }
 
   /**
-   * Returns true if all the elements of the array is numeric
+   * Ensures all the elements are numeric. Non-numeric elements will be transformed into NaN.
    */
   toNumeric(): Sparray<number> {
     return this.map(a => {
@@ -661,7 +670,7 @@ class Sparray<T>  {
   }
 
   /**
-   * Returns a sparray with all the elements which has the maximum value returned by valueFn
+   * Returns a sparray with all the elements which have the maximum value returned by valueFn
    */
   maxBy(valueFn: (value: T) => any, thisArg?: any): Sparray<T> {
     if (this.isEmpty())
@@ -674,11 +683,11 @@ class Sparray<T>  {
   }
 
   /**
-   * Indexes the elements by a key. The result is an object where the keys are providen by keyFn and the values are the own elements.
+   * Indexes the elements by a key. The result will be an object where the keys are provided by keyFn and the values are the own elements.
    * If there are duplicate keys, the last element that generated that key will be preserved.
    * @see groupBy
-   * @param keyFn function to provide a key by element
-   * @param thisArg object to be used as this inside keyFn
+   * @param keyFn - function to provide a key by element
+   * @param thisArg - object to be used as this inside keyFn
    */
   indexBy(keyFn: (value: T) => string, thisArg?: any): { [key: string]: T; } {
     keyFn.bind(thisArg || this)
@@ -690,14 +699,14 @@ class Sparray<T>  {
   }
 
   /**
-   * Groups the elements by a key. The result is an object where the keys are providen by keyFn and the values are grouped as a sparray.
-   * It is possible to handle the groupd elements (as sparrays) by valuesFn
+   * Groups the elements by a key. The result will be an object where the keys are provided by keyFn and the values are grouped as sparrays.
+   * It is possible to handle the grouped elements (as sparrays) by valuesFn
    * @see indexBy
-   * @param keyFn function to provide a key by element
-   * @param valuesFn handle the sparray of the grouped elements
-   * @param thisArg object to be used as this inside keyFn
+   * @param keyFn  - function to provide a key by element
+   * @param valuesFn - handle the sparray of the grouped elements for each key
+   * @param thisArg - object to be used as this inside keyFn
    */
-  groupBy(keyFn: (value: T) => string, valuesFn: (values: Sparray<T>) => any, thisArg?: any): any {
+  groupBy(keyFn: (value: T) => string, valuesFn: (key: string, values: Sparray<T>) => any, thisArg?: any): any {
     if (typeof valuesFn === 'undefined')
       valuesFn = a => a
 
@@ -711,7 +720,7 @@ class Sparray<T>  {
     }, {} as any)
 
     for (const p of Object.keys(grouped)) {
-      grouped[p] = valuesFn(from(grouped[p]))
+      grouped[p] = valuesFn(p, from(grouped[p]))
     }
 
     return grouped
@@ -733,9 +742,9 @@ class Sparray<T>  {
   }
 
   /**
-   * Partitions the sparray in batches of size. If step is providen, it determines the step to the next batch.
-   * @param size the size of partition
-   * @param step how many steps to the next partition, by default is the same of size
+   * Partitions the sparray in batches of the provided size. The step determines the size of the step before generating each partition.
+   * @param size - the size of the partition
+   * @param step - the size of the step. By default is the same as the size of the partition.
    */
   sliding(size: number, step?: number): Sparray<Sparray<T>> {
     if (size < 1) throw new Error('Size must be a positive integer')
@@ -755,8 +764,8 @@ class Sparray<T>  {
   }
 
   /**
-   * Return the first element, and if the 'n' param is provided, return the first n elements as a new sparray
-   * @param n [optional] number of elements
+   * Return the first element of the sparray. If the param 'n' is provided, the first n elements as a new sparray are returned.
+   * @param n - number of elements
    */
   first(n?: number): T | Sparray<T> {
     if (typeof n === 'undefined') {
@@ -767,9 +776,9 @@ class Sparray<T>  {
   }
 
   /**
-   * Return the last element, and if the 'n' param is provided, return the last n elements as a new sparray
-   * @param n [optional] number of elements
-   */
+  * Return the last element of the sparray. If the param 'n' is provided, the last n elements as a new sparray are returned.
+  * @param n - number of elements
+  */
   last(n?: number): T | Sparray<T> {
     if (typeof n === 'undefined') {
       return this.get(this.length - 1)
@@ -785,6 +794,14 @@ class Sparray<T>  {
     return this.map((value, index) => ({ index, value }))
   }
 
+  /**
+   * Create a new sparray zipping the source and any other sparray/array provided.
+   * The size of the new sparray will be the size of the largest sparray/array
+   * and each element of the new sparray will be a sparray containing the element
+   * of i-th index from source and each provided sparray/array.
+   *
+   * @param toZip sparrays or arrays to zip
+   */
   zip(...toZip: any[]): Sparray<Sparray<any>> {
     const size = toZip.filter(a => a.length).map(a => a.length).reduce((a, b) => Math.max(a, b), this.length)
 
@@ -806,9 +823,11 @@ class Sparray<T>  {
   }
 
   /**
-   * Sample data from the sparray. If n is not provided, a single element will be returned, otherwise, a new sparray will be returned.
-   * @param n
-   * @param withReplacement
+   * Sample data from the sparray. If n is not provided, a single element
+   * will be returned, otherwise, a new sparray of size n will be returned.
+   *
+   * @param n - the number of sampled elements
+   * @param withReplacement - determines if an element could be selected twice or more
    */
   sample(n?: number, withReplacement?: boolean): T | Sparray<T> {
 

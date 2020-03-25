@@ -12,7 +12,8 @@
         "semicolon": [
             true,
             "never"
-        ]
+        ],
+        "completed-docs": true
     },
     "rulesDirectory": []
 }
