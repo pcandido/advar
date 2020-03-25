@@ -106,6 +106,9 @@ export function isSparray(obj: any): boolean {
  */
 class Sparray<T>  {
 
+  /**
+   * Internal structure to hold data.
+   */
   _data: T[]
 
   /**
@@ -163,7 +166,7 @@ class Sparray<T>  {
     return this._data.length
   }
 
-  /*
+  /**
    * Returns the number of elements of the sparray.
    */
   size(): number {
@@ -604,7 +607,11 @@ class Sparray<T>  {
    * Returns the string representation of the sparray and its elements
    */
   toString(): string {
-    return `[ ${this.join(', ')} ]`
+    if (this.isEmpty()) {
+      return '[ ]'
+    } else {
+      return `[ ${this.join(', ')} ]`
+    }
   }
 
   /**
@@ -706,9 +713,9 @@ class Sparray<T>  {
    * @param valuesFn - handle the sparray of the grouped elements for each key
    * @param thisArg - object to be used as this inside keyFn
    */
-  groupBy(keyFn: (value: T) => string, valuesFn: (key: string, values: Sparray<T>) => any, thisArg?: any): any {
+  groupBy(keyFn: (value: T) => string, valuesFn: (values: Sparray<T>, key: string) => any, thisArg?: any): any {
     if (typeof valuesFn === 'undefined')
-      valuesFn = a => a
+      valuesFn = (a, k) => a
 
     keyFn.bind(thisArg || this)
     valuesFn.bind(thisArg || this)
@@ -720,7 +727,7 @@ class Sparray<T>  {
     }, {} as any)
 
     for (const p of Object.keys(grouped)) {
-      grouped[p] = valuesFn(p, from(grouped[p]))
+      grouped[p] = valuesFn(from(grouped[p]), p)
     }
 
     return grouped
@@ -776,9 +783,9 @@ class Sparray<T>  {
   }
 
   /**
-  * Return the last element of the sparray. If the param 'n' is provided, the last n elements as a new sparray are returned.
-  * @param n - number of elements
-  */
+   * Return the last element of the sparray. If the param 'n' is provided, the last n elements as a new sparray are returned.
+   * @param n - number of elements
+   */
   last(n?: number): T | Sparray<T> {
     if (typeof n === 'undefined') {
       return this.get(this.length - 1)

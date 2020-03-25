@@ -565,9 +565,9 @@ describe('sparray', () => {
   describe('toString()', () => {
 
     it('should return the string representation of sparray and its elements', () => {
-      eq(sparray.from().toString(), '');
-      eq(sparray.from(1, 2, 3).toString(), '1,2,3');
-      eq(sparray.from('a', 'b', 'c').toString(), 'a,b,c');
+      eq(sparray.from().toString(), '[ ]');
+      eq(sparray.from(1, 2, 3).toString(), '[ 1, 2, 3 ]');
+      eq(sparray.from('a', 'b', 'c').toString(), '[ a, b, c ]');
     });
 
   })
