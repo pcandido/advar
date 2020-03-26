@@ -876,4 +876,31 @@ describe('sparray', () => {
     });
   });
 
+  describe('cross(sparray, combineFn, thisArg)', () => {
+
+    it('should return empty if any of sparrays is empty', () => {
+      deq(sparray.empty().cross(sparray.empty()).toArray(), []);
+      deq(sparray.from(1).cross(sparray.empty()).toArray(), []);
+      deq(sparray.empty().cross(sparray.from(1)).toArray(), []);
+    });
+
+    it('should cross both sparrays', () => {
+      deq(sparray.from(1).cross(sparray.from(2)).toArray(), [[1, 2]]);
+      deq(sparray.from(1, 2).cross(sparray.from(2)).toArray(), [[1, 2], [2, 2]]);
+      deq(sparray.from(1).cross(sparray.from(2, 3)).toArray(), [[1, 2], [1, 3]]);
+      deq(sparray.from(1, 2).cross(sparray.from(2, 3)).toArray(), [[1, 2], [1, 3], [2, 2], [2, 3]]);
+    });
+
+    it('should receive a function to specify how join the elements', () => {
+      deq(sparray.from(1, 2).cross(sparray.from(2, 3), (a, b) => [a, b]).toArray(), [[1, 2], [1, 3], [2, 2], [2, 3]]);
+      deq(sparray.from(1, 2).cross(sparray.from(2, 3), (a, b) => ({ left: a, right: b })).toArray(), [
+        { left: 1, right: 2 },
+        { left: 1, right: 3 },
+        { left: 2, right: 2 },
+        { left: 2, right: 3 }
+      ]);
+    });
+
+  });
+
 });

@@ -860,4 +860,24 @@ class Sparray<T>  {
     }
   }
 
+  /**
+   * Builds a cartesian product from this and a second sparray/array. A combine function may be used to handle each pair combination.
+   *
+   * @param that - sparray or array to cross
+   * @param combineFn - receive the objects from both sides to combine
+   * @param thisArg - object to be used as this inside combineFn
+   */
+  cross<U>(that: Sparray<U> | Array<U>, combineFn: (left: T, right: U) => any = (l, r) => [l, r], thisArg?: any): Sparray<any> {
+    combineFn.bind(thisArg || this);
+
+    const data = [];
+    for (const t1 of this) {
+      for (const t2 of that) {
+        data.push(combineFn(t1, t2));
+      }
+    }
+
+    return from(data);
+  }
+
 }
