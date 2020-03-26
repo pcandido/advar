@@ -867,17 +867,17 @@ class Sparray<T>  {
    * @param combineFn - receive the objects from both sides to combine
    * @param thisArg - object to be used as this inside combineFn
    */
-  cross<U>(that: Sparray<U> | Array<U>, combineFn: (left: T, right: U) => any = (l, r) => [l, r], thisArg?: any): Sparray<any> {
-    combineFn.bind(thisArg || this);
+  cross<U>(that: Sparray<U> | U[], combineFn: (left: T, right: U) => any = (l, r) => [l, r], thisArg?: any): Sparray<any> {
+    combineFn.bind(thisArg || this)
 
-    const data = [];
+    const data = []
     for (const t1 of this) {
       for (const t2 of that) {
-        data.push(combineFn(t1, t2));
+        data.push(combineFn(t1, t2))
       }
     }
 
-    return from(data);
+    return from(data)
   }
 
 }
