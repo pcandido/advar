@@ -132,6 +132,13 @@ class Sparray<T>  {
   }
 
   /**
+   * Returns the raw data as a native set
+   */
+  toSet(): Set<T> {
+    return new Set(this.toArray())
+  }
+
+  /**
    * An node debugger/inspect representation for the sparray. It will be the same as the raw data (array-like representation).
    */
   /*

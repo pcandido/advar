@@ -139,6 +139,23 @@ describe('sparray', () => {
 
   });
 
+  describe('toSet()', () => {
+
+    it('should return the raw stored data as a Set', () => {
+      deq(sparray.from(1, 2, 3).toSet(), new Set([1, 2, 3]));
+      deq(sparray.from(1, 2, 3, 3, 2, 1).toSet(), new Set([1, 2, 3]));
+    });
+
+    it('changes on returned raw data should not impact the sparray', () => {
+      const a = sparray.from(1, 2, 3);
+      const b = a.toSet();
+      b.add(4);
+      deq(a.toArray(), [1, 2, 3]);
+      deq(b, new Set([1, 2, 3, 4]));
+    });
+
+  });
+
   describe('get(i)', () => {
 
     it('should return an element by index', () => {
