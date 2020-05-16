@@ -706,10 +706,21 @@ class Sparray<T>  {
   indexBy(keyFn: (value: T) => string, thisArg?: any): { [key: string]: T; } {
     keyFn.bind(thisArg || this)
 
-    return this._data.reduce((a, b) => {
+    const result = this._data.reduce((a, b) => {
       a[keyFn(b)] = b
       return a
     }, {} as { [key: string]: T; })
+
+    Object.defineProperty(result, 'asSparray', {
+      get: (): Sparray<{ key: string, value: T }> => {
+        return from(Object.keys(result))
+          .map(k => ({ key: k as string, value: result[k as string] as T }))
+      },
+      configurable: false,
+      enumerable: false
+    });
+
+    return result;
   }
 
   /**
@@ -736,6 +747,15 @@ class Sparray<T>  {
     for (const p of Object.keys(grouped)) {
       grouped[p] = valuesFn(from(grouped[p]), p)
     }
+
+    Object.defineProperty(grouped, 'asSparray', {
+      get: (): Sparray<{ key: string, values: Sparray<any> }> => {
+        return from(Object.keys(grouped))
+          .map(k => ({ key: k as string, values: grouped[k as string] }))
+      },
+      configurable: false,
+      enumerable: false
+    });
 
     return grouped
   }
