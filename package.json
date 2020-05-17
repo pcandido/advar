@@ -5,9 +5,9 @@
     "main": "dist/sparray.js",
     "types": "dist/sparray.d.ts",
     "scripts": {
-        "clean": "rm -rf dist dist-browser",
-        "build": "tsc && tsc -p tsconfig-browser.json",
-        "watch": "tsc -w && tsc -w -p tsconfig-browser.json",
+        "clean": "rm -rf dist",
+        "build": "tsc",
+        "watch": "tsc -w",
         "lint": "tslint -p tsconfig.json",
         "cover": "nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout 15000 --exit test/*js",
         "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
@@ -42,7 +42,6 @@
         "typescript": "^3.9.2"
     },
     "files": [
-        "dist",
-        "dist-browser"
+        "dist"
     ]
 }

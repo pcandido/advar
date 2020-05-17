@@ -1,3 +1,5 @@
+import util from 'util'
+
 /**
  * Builds a sparray from several ways:
  * 1) with no param for an empty array
@@ -141,14 +143,14 @@ class Sparray<T>  {
   /**
    * An node debugger/inspect representation for the sparray. It will be the same as the raw data (array-like representation).
    */
-  /*
-  //TODO: verify how to include this withou break browser version
-  import util from 'util';
   [util.inspect.custom](depth: any, opts: any): any {
-    return this._data;
+    return this._data
   }
-  */
 
+  /**
+   * Resolve the index, considering the posibility of backwoards indexing
+   * @param index the index to resolve
+   */
   private _resolveIndex(index: number): number {
     if (index < 0)
       return this.length + index
