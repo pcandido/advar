@@ -73,7 +73,85 @@
 					<a href="https://github.com/pcandido/sparray/issues"><img src="https://img.shields.io/github/issues/pcandido/sparray" alt="GitHub issues"></a>
 					<a href="https://travis-ci.org/pcandido/sparray"><img src="https://travis-ci.org/pcandido/sparray.svg?branch=master" alt="Build Status"></a>
 				<a href="https://coveralls.io/github/pcandido/sparray?branch=master"><img src="https://coveralls.io/repos/github/pcandido/sparray/badge.svg?branch=master" alt="Coverage Status"></a></p>
-				<p><a href="https://pcandido.github.io/sparray/">Documentation</a></p>
+				<p>The full API documentation can be found <a href="https://pcandido.github.io/sparray/">here</a>.
+				Sparray includes most of the native array methods (those that do not change the array state) plus some advanced features.</p>
+				<a href="#instalation" id="instalation" style="color: inherit; text-decoration: none;">
+					<h2>Instalation</h2>
+				</a>
+				<pre><code><span class="hljs-built_in">npm</span> i -s sparray</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h3>Usage</h3>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> sparray = <span class="hljs-built_in">require</span>(<span class="hljs-string">'sparray'</span>);
+
+sparray.from(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>)
+  <span class="hljs-comment">// the result is a sparray, an immutable list structure. it can be transformed, generating new sparrays.</span>
+
+  .map(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a * <span class="hljs-number">2</span>) <span class="hljs-comment">// [ 2, 4, 6, 8, 10, 12, 14, 16]</span>
+  <span class="hljs-comment">// the map function works just like in native arrays</span>
+
+  .filter(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a &gt; <span class="hljs-number">5</span>) <span class="hljs-comment">// [ 6, 8, 10, 12, 14, 16 ]</span>
+  <span class="hljs-comment">// the filter function works just like in native arrays</span>
+
+  .forEach(<span class="hljs-function">(<span class="hljs-params">a,i</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${i}</span>. <span class="hljs-subst">${a}</span>`</span>)) <span class="hljs-comment">// [ 6, 8, 10, 12, 14, 16 ]</span>
+  <span class="hljs-comment">// forEach can be chained, but the function return does not change the chain</span>
+
+  .flatMap(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.toString().split(<span class="hljs-string">''</span>)).map(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(a)) <span class="hljs-comment">// [ 6, 8, 1, 0, 1, 2, 1, 4, 1, 6 ]</span>
+  <span class="hljs-comment">// flatMap is a kind of map that flatten nested arrays/sparrays to the main sparray</span>
+
+  .groupBy(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a % <span class="hljs-number">2</span> === <span class="hljs-number">0</span>) <span class="hljs-comment">// {true: [ 6, 8, 0, 2, 4, 6 ], false: [ 1, 1, 1, 1 ]}</span>
+  <span class="hljs-comment">// group elements according to a given criterion</span>
+
+  .asSparray <span class="hljs-comment">// [{key: 'true', values: [ 6, 8, 0, 2, 4, 6 ]}, {key: 'false', values: [ 1, 1, 1, 1 ]}]</span>
+  <span class="hljs-comment">// transform the group object back to sparray</span>
+
+  .map(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.values) <span class="hljs-comment">// [[ 6, 8, 0, 2, 4, 6 ], [ 1, 1, 1, 1 ]]</span>
+  <span class="hljs-comment">// back to a sparray of sparrays</span>
+
+  .flatten() <span class="hljs-comment">// [ 6, 8, 0, 2, 4, 6, 1, 1, 1, 1 ]</span>
+  <span class="hljs-comment">// flat the nested sparrays to the main one</span>
+
+  .distinct() <span class="hljs-comment">// [ 6, 8, 0, 2, 4, 1 ]</span>
+  <span class="hljs-comment">// remove all the duplicated elements</span>
+
+  .zip([<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>, <span class="hljs-number">40</span>, <span class="hljs-number">50</span>, <span class="hljs-number">60</span>]) <span class="hljs-comment">// [[6, 10], [8, 20], [0, 30], [2, 40], [4, 50], [1, 60]]</span>
+  <span class="hljs-comment">// join two sparrays/arrays, matching the elements by index</span>
+
+  .map(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.sum()) <span class="hljs-comment">// [ 16, 28, 30, 42, 54, 61 ]</span>
+  <span class="hljs-comment">// sparrays can sum all their elements, they can also get the average (avg), min and max</span>
+
+  .sliding(<span class="hljs-number">2</span>) <span class="hljs-comment">// [[16, 28], [30, 42], [54, 61]]</span>
+  <span class="hljs-comment">// break the sparray in smaller parts</span>
+
+  .map(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.get(<span class="hljs-number">-1</span>)) <span class="hljs-comment">// [ 28, 42, 61 ]</span>
+  <span class="hljs-comment">// get is the way to access an element (it cannot be set). negative indices can be used to backward indexing</span>
+
+  .cross([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], (a, b) =&gt; a * b) <span class="hljs-comment">// [ 28, 56, 84, 42, 84, 126, 61, 122, 183]</span>
+  <span class="hljs-comment">// produces a cartesian product. a combine function may or may not be given</span>
+
+  .slice(<span class="hljs-number">2</span>,<span class="hljs-number">-1</span>) <span class="hljs-comment">// [ 84, 42, 84, 126, 61, 122 ]</span>
+  <span class="hljs-comment">// slices can be used with negative indices</span>
+
+  .first(<span class="hljs-number">5</span>) <span class="hljs-comment">// [ 84, 42, 84, 126, 61 ]</span>
+  <span class="hljs-comment">// first can be used with or without parameter</span>
+
+  .sample(<span class="hljs-number">4</span>) <span class="hljs-comment">// [ 61, 84, 126, 42 ]</span>
+  <span class="hljs-comment">// randomly select some elements. can be used with or without replacement</span>
+
+  .indexBy(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> <span class="hljs-built_in">Math</span>.trunc(a/<span class="hljs-number">10</span>)) <span class="hljs-comment">// { '6': 61, '8': 84, '12': 126, '4': 42 }</span>
+  <span class="hljs-comment">// like groupBy, but elements with the same index will conflict and only one will be preserved</span>
+
+  .asSparray <span class="hljs-comment">// [{key:'6', value:61}, {key:'8', value:84}, {key:'12', value:126}, {key:'4', value:42}]</span>
+  <span class="hljs-comment">// transform back to sparray</span>
+
+  .sortBy(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(a.key)) <span class="hljs-comment">// [{key:'4', value:42}, {key:'6', value:61}, {key:'8', value:84}, {key:'12', value:126}]</span>
+  <span class="hljs-comment">// besides sort, sortBy take a function to extract the sort key of each element</span>
+
+  .isEmpty() <span class="hljs-comment">// false</span>
+  <span class="hljs-comment">// determines if the sparray is or not empty. there is also the function isNotEmpty()</span>
+</code></pre>
+				<p>This example shows a few features of sparrays, consult the <a href="https://pcandido.github.io/sparray/">documentation</a> for all the features.</p>
+				<p>Fell free to send an issue by GitHub for questions, bugs, suggestions, and so on.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
