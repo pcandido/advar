@@ -712,15 +712,17 @@ class Sparray<T>  {
     }, {} as { [key: string]: T; })
 
     Object.defineProperty(result, 'asSparray', {
+      /* tslint:disable:completed-docs */
       get: (): Sparray<{ key: string, value: T }> => {
         return from(Object.keys(result))
           .map(k => ({ key: k as string, value: result[k as string] as T }))
       },
+      /* tslint:enable:completed-docs */
       configurable: false,
       enumerable: false
-    });
+    })
 
-    return result;
+    return result
   }
 
   /**
@@ -749,13 +751,15 @@ class Sparray<T>  {
     }
 
     Object.defineProperty(grouped, 'asSparray', {
+      /* tslint:disable:completed-docs */
       get: (): Sparray<{ key: string, values: Sparray<any> }> => {
         return from(Object.keys(grouped))
           .map(k => ({ key: k as string, values: grouped[k as string] }))
       },
+      /* tslint:enable:completed-docs */
       configurable: false,
       enumerable: false
-    });
+    })
 
     return grouped
   }
