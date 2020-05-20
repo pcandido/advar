@@ -914,3 +914,5 @@ class Sparray<T>  {
   }
 
 }
+
+export default { from, range, fillOf, empty, isSparray }
