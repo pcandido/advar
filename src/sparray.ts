@@ -106,7 +106,7 @@ export function isSparray(obj: any): boolean {
  * e.g: attributes of an object). Every operation/transformation (such as map, filter, and concat)
  * will generate a new and immutable sparray.
  */
-class Sparray<T>  {
+export class Sparray<T>  {
 
   /**
    * Internal structure to hold data.
