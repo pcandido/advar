@@ -578,7 +578,7 @@ export class Sparray<T>  {
    * @param keyFn - get sort key from object
    * @param thisArg object to be used as this inside sortFn
    */
-  sortBy<U>(keyFn: (value: T) => any, reverse: boolean, thisArg?: any) {
+  sortBy<U>(keyFn: (value: T) => U | U[] | Sparray<U>, reverse: boolean, thisArg?: any): Sparray<T> {
     keyFn.bind(thisArg || this)
 
     return from(this._data.sort((a, b) => {
@@ -588,8 +588,8 @@ export class Sparray<T>  {
       if (isSparray(keysA)) keysA = (keysA as Sparray<U>).toArray()
       if (isSparray(keysB)) keysB = (keysB as Sparray<U>).toArray()
 
-      if (!Array.isArray(keysA)) keysA = [keysA]
-      if (!Array.isArray(keysB)) keysB = [keysB]
+      if (!Array.isArray(keysA)) keysA = [keysA as U]
+      if (!Array.isArray(keysB)) keysB = [keysB as U]
 
       for (let i = 0; i < Math.min(keysA.length, keysB.length); i++) {
         if (keysA[i] < keysB[i]) return reverse ? 1 : -1
@@ -705,7 +705,7 @@ export class Sparray<T>  {
    * @param keyFn - function to provide a key by element
    * @param thisArg - object to be used as this inside keyFn
    */
-  indexBy(keyFn: (value: T) => string, thisArg?: any): { [key: string]: T; } {
+  indexBy(keyFn: (value: T) => string, thisArg?: any): { [key: string]: T } {
     keyFn.bind(thisArg || this)
 
     const result = this._data.reduce((a, b) => {
@@ -735,7 +735,9 @@ export class Sparray<T>  {
    * @param valuesFn - handle the sparray of the grouped elements for each key
    * @param thisArg - object to be used as this inside keyFn
    */
-  groupBy(keyFn: (value: T) => string, valuesFn: (values: Sparray<T>, key: string) => any, thisArg?: any): any {
+  groupBy(keyFn: (value: T) => string): { [key: string]: Sparray<T> }
+  groupBy<R>(keyFn: (value: T) => string, valuesFn?: (values: Sparray<T>, key: string) => R, thisArg?: any): { [key: string]: R }
+  groupBy(keyFn: (value: T) => string, valuesFn?: (values: Sparray<T>, key: string) => any, thisArg?: any): { [key: string]: any } {
     if (typeof valuesFn === 'undefined')
       valuesFn = (a, k) => a
 
@@ -807,11 +809,13 @@ export class Sparray<T>  {
    * Return the first element of the sparray. If the param 'n' is provided, the first n elements as a new sparray are returned.
    * @param n - number of elements
    */
+  first(): T
+  first(n: number): Sparray<T>
   first(n?: number): T | Sparray<T> {
-    if (typeof n === 'undefined') {
-      return this.get(0)
-    } else {
+    if (typeof n === 'number') {
       return this.slice(0, n)
+    } else {
+      return this.get(0)
     }
   }
 
@@ -819,11 +823,13 @@ export class Sparray<T>  {
    * Return the last element of the sparray. If the param 'n' is provided, the last n elements as a new sparray are returned.
    * @param n - number of elements
    */
+  last(): T
+  last(n: number): Sparray<T>
   last(n?: number): T | Sparray<T> {
-    if (typeof n === 'undefined') {
-      return this.get(this.length - 1)
-    } else {
+    if (typeof n === 'number') {
       return this.slice(-n)
+    } else {
+      return this.get(this.length - 1)
     }
   }
 
@@ -869,6 +875,8 @@ export class Sparray<T>  {
    * @param n - the number of sampled elements
    * @param withReplacement - determines if an element could be selected twice or more
    */
+  sample(): T
+  sample(n: number, withReplacement?: boolean): Sparray<T>
   sample(n?: number, withReplacement?: boolean): T | Sparray<T> {
 
     const random = (max: number) => Math.trunc(Math.random() * max)
