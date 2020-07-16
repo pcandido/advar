@@ -705,9 +705,9 @@ export class Sparray<T>  {
    * @param keyFn - function to provide a key by element
    * @param thisArg - object to be used as this inside keyFn
    */
-  indexBy(keyFn: (value: T) => string): { [key: string]: T }
-  indexBy<R>(keyFn: (value: T) => string, valuesFn?: (value: T, key: string) => R, thisArg?: any): { [key: string]: R }
-  indexBy(keyFn: (value: T) => string, valuesFn?: (value: T, key: string) => any, thisArg?: any): { [key: string]: any } {
+  indexBy(keyFn: (value: T) => string | number): { [key: string]: T }
+  indexBy<R>(keyFn: (value: T) => string | number, valuesFn?: (value: T, key: string | number) => R, thisArg?: any): { [key: string]: R }
+  indexBy(keyFn: (value: T) => string | number, valuesFn?: (value: T, key: string | number) => any, thisArg?: any): { [key: string]: any } {
     keyFn.bind(thisArg || this)
 
     const result = this._data.reduce((a, b) => {
@@ -738,9 +738,9 @@ export class Sparray<T>  {
    * @param valuesFn - handle the sparray of the grouped elements for each key
    * @param thisArg - object to be used as this inside keyFn
    */
-  groupBy(keyFn: (value: T) => string): { [key: string]: Sparray<T> }
-  groupBy<R>(keyFn: (value: T) => string, valuesFn?: (values: Sparray<T>, key: string) => R, thisArg?: any): { [key: string]: R }
-  groupBy(keyFn: (value: T) => string, valuesFn?: (values: Sparray<T>, key: string) => any, thisArg?: any): { [key: string]: any } {
+  groupBy(keyFn: (value: T) => string | number): { [key: string]: Sparray<T> }
+  groupBy<R>(keyFn: (value: T) => string | number, valuesFn?: (values: Sparray<T>, key: string | number) => R, thisArg?: any): { [key: string]: R }
+  groupBy(keyFn: (value: T) => string | number, valuesFn?: (values: Sparray<T>, key: string | number) => any, thisArg?: any): { [key: string]: any } {
     if (typeof valuesFn === 'undefined')
       valuesFn = (a, k) => a
 
