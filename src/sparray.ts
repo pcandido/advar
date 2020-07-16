@@ -705,11 +705,14 @@ export class Sparray<T>  {
    * @param keyFn - function to provide a key by element
    * @param thisArg - object to be used as this inside keyFn
    */
-  indexBy(keyFn: (value: T) => string, thisArg?: any): { [key: string]: T } {
+  indexBy(keyFn: (value: T) => string): { [key: string]: T }
+  indexBy<R>(keyFn: (value: T) => string, valuesFn?: (value: T, key: string) => R, thisArg?: any): { [key: string]: R }
+  indexBy(keyFn: (value: T) => string, valuesFn?: (value: T, key: string) => any, thisArg?: any): { [key: string]: any } {
     keyFn.bind(thisArg || this)
 
     const result = this._data.reduce((a, b) => {
-      a[keyFn(b)] = b
+      const key = keyFn(b)
+      a[key] = (valuesFn || (a => a))(b, key)
       return a
     }, {} as { [key: string]: T; })
 
