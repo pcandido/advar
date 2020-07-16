@@ -712,7 +712,7 @@ export class Sparray<T>  {
 
     const result = this._data.reduce((a, b) => {
       const key = keyFn(b)
-      a[key] = (valuesFn || (a => a))(b, key)
+      a[key] = (valuesFn || (c => c))(b, key)
       return a
     }, {} as { [key: string]: T; })
 
