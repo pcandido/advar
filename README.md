@@ -13,7 +13,7 @@ Sparray includes most of the native array methods (those that do not change the 
 ## Instalation
 
 ```
-npm i -s sparray
+npm i sparray
 ```
 
 ### Usage
